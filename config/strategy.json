@@ -29,7 +29,7 @@
   "fee_taker_beli_persen_resmi": 0.20555,
   "fee_taker_jual_persen_resmi": 0.41555,
   "fee_rincian": "IDR Market (PRO) taker. BELI 0.20555% = service fee 0.2% + pajak 0% + bourse fee 0.00555%. JUAL 0.41555% = service fee 0.2% + pajak 0.21% + bourse fee 0.00555%.",
-  "fee_sumber_url": "ISI: URL halaman Transaction Information / Trading Fee di indodax.com",
+  "fee_sumber_url": "https://indodax.com/profile (bagian Transaction Information > Trading Fee; perlu login, bukti: screenshot docs/fee_indodax_2026-11-05.png)",
   "fee_tanggal_akses": "2026-11-05",
   "fee_api_taker_persen_dicatat": 0.2,
   "fee_api_tanggal_akses": "2026-11-05 (trade_fee_percent_taker dari https://indodax.com/api/pairs)",
