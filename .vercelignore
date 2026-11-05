@@ -1,0 +1,6 @@
+data/
+logs/
+tests/
+dist/
+*.zip
+.env

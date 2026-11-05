@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bot Dry Run Indodax — Fatimah</title>
+<meta name="description" content="UAS Algoritma Trading: dashboard bot dry run Indodax. Semua angka dihitung dari log mentah oleh core/report.py.">
+<style>
+:root{
+  --bg:#fff3f8;--panel:#fff;--panel2:#fff0f7;--line:#fbd3e5;--text:#3b2550;--muted:#8b6f96;--faint:#b9a2c2;
+  --brand:#f0619f;--brand2:#4cb8ef;--up:#10a37a;--down:#ec4d6a;--warn:#e08a12;
+  --upbg:#dcf7ec;--downbg:#ffe3ea;--warnbg:#fff1d6;--brandbg:#ffe1ef;
+  --r:26px;--shadow:0 6px 0 rgba(240,97,159,.08),0 14px 30px rgba(240,97,159,.12);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1b1433;--panel:#261d45;--panel2:#2f2453;--line:#3e3168;--text:#fbeef6;--muted:#c6b2d6;--faint:#9483b0;
+  --brand:#ff9cc8;--brand2:#8fd8ff;--up:#5ee6a8;--down:#ff8aa2;--warn:#ffcf6b;
+  --upbg:rgba(94,230,168,.14);--downbg:rgba(255,138,162,.15);--warnbg:rgba(255,207,107,.14);--brandbg:rgba(255,156,200,.16);
+  --shadow:0 8px 24px rgba(0,0,0,.35);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1b1433;--panel:#261d45;--panel2:#2f2453;--line:#3e3168;--text:#fbeef6;--muted:#c6b2d6;--faint:#9483b0;
+  --brand:#ff9cc8;--brand2:#8fd8ff;--up:#5ee6a8;--down:#ff8aa2;--warn:#ffcf6b;
+  --upbg:rgba(94,230,168,.14);--downbg:rgba(255,138,162,.15);--warnbg:rgba(255,207,107,.14);--brandbg:rgba(255,156,200,.16);
+  --shadow:0 8px 24px rgba(0,0,0,.35);color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 ui-rounded,"SF Pro Rounded",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+header{background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.hd{max-width:1180px;margin:0 auto;padding:12px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.hd b{font-size:17px}.hd small{color:var(--muted);display:block;font-size:12.5px}
+nav{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+nav a,button.t{font:inherit;font-size:13px;color:var(--muted);text-decoration:none;padding:5px 10px;border-radius:999px;border:1px solid transparent;background:none;cursor:pointer}
+nav a:hover,button.t:hover{background:var(--brandbg);color:var(--brand)}
+main{max-width:1180px;margin:0 auto;padding:16px}
+section{margin:22px 0 30px}
+h1,h2{font-family:"Fredoka",ui-rounded,"SF Pro Rounded",system-ui,sans-serif;letter-spacing:-.01em}h1{font-size:26px;margin:4px 0 2px}h2{font-size:20px;margin:0 0 4px}
+.ck{display:grid;gap:8px}.ck div{display:flex;gap:10px;align-items:flex-start;font-size:14px}.ck b.i{flex:none;width:22px;text-align:center}
+.hd b{font-family:"Fredoka",ui-rounded,system-ui,sans-serif}h3{font-size:15px;margin:16px 0 6px}
+.sub{color:var(--muted);font-size:13.5px;margin:0 0 12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.kpi .l{font-size:12.5px;color:var(--muted)}.kpi .v{font-size:25px;font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.kpi .s{font-size:12px;color:var(--faint)}
+.up{color:var(--up)}.down{color:var(--down)}.warn{color:var(--warn)}.muted{color:var(--muted)}
+.badge{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px}
+.b-ok{background:var(--upbg);color:var(--up)}.b-bad{background:var(--downbg);color:var(--down)}.b-warn{background:var(--warnbg);color:var(--warn)}.b-info{background:var(--brandbg);color:var(--brand)}
+.tw{overflow-x:auto;padding:0}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{font-size:12px;color:var(--muted);font-weight:650;background:var(--panel2);position:sticky;top:0}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+.note{font-size:12.5px;color:var(--muted);margin:8px 2px 0}
+.banner{border-radius:var(--r);padding:12px 16px;margin:10px 0;font-size:14px}
+.banner.warn{background:var(--warnbg);border:1px solid var(--warn)}.banner.bad{background:var(--downbg);border:1px solid var(--down)}.banner.info{background:var(--brandbg);border:1px solid var(--line)}
+.chart{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12.5px;color:var(--muted);margin:6px 2px 0;flex-wrap:wrap}
+.legend i{display:inline-block;width:12px;height:3px;border-radius:2px;vertical-align:middle;margin-right:5px}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px}
+.two{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.empty{color:var(--muted);font-size:13.5px;padding:10px 2px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0;font-size:13.5px}dl.kv dt{color:var(--muted)}dl.kv dd{margin:0;font-variant-numeric:tabular-nums}
+@media (max-width:600px){.kpi .v{font-size:21px}nav{margin-left:0}header{position:static}}
+</style>
+</head>
+<body>
+<header><div class="hd">
+  <div><b>Fatimah Tri Lestari <span style="color:var(--brand)">♡</span></b><small>25110200019 · UAS Algoritma Trading · Bot dry run Indodax</small></div>
+  <nav>
+    <a href="#ringkasan">🌸 Ringkasan</a><a href="#siap">🧭 Rubrik</a><a href="#banding">🔮 Backtest vs Forward</a><a href="#gap">🧪 Gap</a><a href="#ops">🛠️ Operasional</a>
+    <a href="#biaya">💸 Spread &amp; biaya</a><a href="#log">📜 Trade &amp; log</a><a href="#aturan">🎀 Aturan</a><a href="#catatan">📝 Keterbatasan &amp; AI</a>
+    <button class="t" id="theme" aria-label="Ganti tema">Tema</button>
+  </nav>
+</div></header>
+<main>
+  <div id="status" class="banner info">Memuat report…</div>
+  <section id="ringkasan"></section>
+  <section id="siap"></section>
+  <section id="banding"></section>
+  <section id="gap"></section>
+  <section id="ops"></section>
+  <section id="biaya"></section>
+  <section id="log"></section>
+  <section id="aturan"></section>
+  <section id="catatan"></section>
+</main>
+<script>
+// Data report: di Vercel diambil dari /api/report; di file offline sudah tertanam oleh hitung_ulang.py.
+// Halaman ini TIDAK menghitung metrik apa pun — hanya memformat angka dari report.
+window.__REPORT__ = null; /*__EMBED__*/
+</script>
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ok=x=>x!==null&&x!==undefined&&!(typeof x==='number'&&!isFinite(x));
+const nf=(x,d=0)=>ok(x)?x.toLocaleString('id-ID',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const pct=(x,d=2,sign=true)=>ok(x)?((sign&&x>0?'+':'')+nf(x*100,d)+'%'):'—';
+const pp=(x,d=2)=>ok(x)?((x>0?'+':'')+nf(x,d)+'%'):'—';
+const rp=x=>ok(x)?(x<0?'−':'')+'Rp'+nf(Math.abs(x),0):'—';
+const cls=x=>ok(x)?(x>0?'up':x<0?'down':''):'';
+const WIB=t=>ok(t)?new Date((t+7*3600)*1000).toISOString().slice(0,16).replace('T',' ')+' WIB':'—';
+const isoW=s=>s?WIB(Date.parse(s)/1000):'—';
+const badge=(t,k)=>`<span class="badge b-${k}">${esc(t)}</span>`;
+const tbl=(head,rows,num=[])=>rows.length?`<div class="card tw"><table><thead><tr>${head.map((h,i)=>`<th${num.includes(i)?' class="n"':''}>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td${num.includes(i)?' class="n"':''}>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:'<div class="empty">Belum ada data.</div>';
+const kpi=(l,v,s,c='')=>`<div class="card kpi"><div class="l">${l}</div><div class="v ${c}">${v}</div><div class="s">${s||''}</div></div>`;
+
+function chart(series,{h=230,fmt=v=>pct(v/1e8-1,1)}={}){
+  const all=series.flatMap(s=>s.pts).filter(p=>ok(p[1]));
+  if(all.length<2) return '<div class="empty">Belum cukup titik untuk grafik.</div>';
+  const W=900,H=h,L=58,R=12,T=10,B=24;
+  const x0=Math.min(...all.map(p=>p[0])),x1=Math.max(...all.map(p=>p[0]));
+  let y0=Math.min(...all.map(p=>p[1])),y1=Math.max(...all.map(p=>p[1]));if(y0===y1){y0*=.99;y1*=1.01}
+  const X=t=>L+(t-x0)/(x1-x0||1)*(W-L-R),Y=v=>T+(1-(v-y0)/(y1-y0))*(H-T-B);
+  const grid=[0,.25,.5,.75,1].map(f=>{const v=y0+f*(y1-y0);return `<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${L-6}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)">${fmt(v)}</text>`}).join('');
+  const xl=[x0,(x0+x1)/2,x1].map((t,i)=>`<text x="${X(t)}" y="${H-6}" text-anchor="${['start','middle','end'][i]}" font-size="11" fill="var(--muted)">${new Date((t+7*3600)*1000).toISOString().slice(0,10)}</text>`).join('');
+  const lines=series.map(s=>{const d=s.pts.filter(p=>ok(p[1])).map((p,i)=>(i?'L':'M')+X(p[0]).toFixed(1)+' '+Y(p[1]).toFixed(1)).join(' ');return `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${s.w||2}" stroke-linejoin="round"/>`}).join('');
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">${grid}${xl}${lines}</svg><div class="legend">${series.map(s=>`<span><i style="background:${s.color}"></i>${esc(s.name)}</span>`).join('')}</div>`;
+}
+
+function render(R){
+  const F=R.forward||{},B=R.backtest,G=R.gap,O=R.operasional||{},S=R.strategi||{},FT=F.trade||{},BT=B?B.trade:null;
+  const warn=[];
+  if(!ok(S.fee_taker_beli_persen_resmi)) warn.push('Tarif fee resmi belum diisi di config/strategy.json.');
+  if((R.param_hash_di_log||[]).length>1) warn.push('Log berisi lebih dari satu hash parameter: '+R.param_hash_di_log.join(', ')+' — cek apakah aturan berubah setelah freeze.');
+  if(!B) warn.push('Hasil backtest (results/backtest) belum ada.');
+  if(!G) warn.push('Backtest jendela forward (results/window) belum dijalankan; bagian Gap kosong sampai forward test selesai.');
+  $('#status').className='banner '+(warn.length?'warn':'info');
+  $('#status').innerHTML=`<b>Sumber angka:</b> ${esc((R.info||{}).sumber||'')} · dibuat ${isoW(R.dibuat_utc)} · hash parameter <code>${esc(R.param_hash)}</code>${(R.info||{}).kode?` · commit <code>${esc(R.info.kode)}</code>`:''}`+(warn.length?'<ul style="margin:6px 0 0 18px;padding:0">'+warn.map(w=>`<li>${esc(w)}</li>`).join('')+'</ul>':'');
+
+  // ---------------- ringkasan
+  const up=O.uptime;
+  $('#ringkasan').innerHTML=`<h1>${esc(S.nama||'')}</h1><p class="sub">Long-only · ${S.timeframe_menit} menit · ${esc((S.pairs||[]).map(p=>p.toUpperCase()).join(', '))} · modal virtual ${rp(S.modal_awal)} · forward ${WIB((F.jendela||{}).mulai)} → ${WIB((F.jendela||{}).selesai)}</p>
+  <div class="grid">
+   ${kpi('Return forward test',pct(F.return_total),'equity '+rp(F.equity_akhir)+' (posisi dinilai di best bid)',cls(F.return_total))}
+   ${kpi('Max drawdown forward',pct(F.max_drawdown),'dari '+nf(F.n_titik)+' titik equity per panggilan','down')}
+   ${kpi('BTC/IDR buy &amp; hold (forward)',pct((F.benchmark_btc||{}).return_total),'beli di ask, nilai di best bid',cls((F.benchmark_btc||{}).return_total))}
+   ${kpi('Uptime',pct(up,1,false),nf(O.candle_tepat_waktu)+' / '+nf(O.candle_seharusnya)+' candle tepat waktu',ok(up)?(up>=.95?'up':up>=.8?'warn':'down'):'')}
+   ${kpi('Sinyal identik',G?pct(G.sinyal.persen_identik,1,false):'—',G?nf(G.sinyal.identik)+' / '+nf(G.sinyal.dibandingkan)+' pasangan×candle':'menunggu backtest jendela',G?(G.sinyal.persen_identik===1?'up':'warn'):'')}
+   ${kpi('Return backtest 3 thn',B?pct(B.return_total):'—',B?'CAGR '+pct(B.cagr)+' · MDD '+pct(B.max_drawdown):'',B?cls(B.return_total):'')}
+  </div>
+  <div class="two" style="margin-top:12px">
+   <div class="card"><h3 style="margin-top:0">Equity forward test vs BTC/IDR buy &amp; hold</h3>${chart([{name:'Bot (equity per panggilan)',color:'var(--brand)',pts:F.kurva||[]},{name:'BTC/IDR buy & hold',color:'var(--brand2)',pts:(F.benchmark_btc||{}).kurva||[],w:1.5}],{fmt:v=>pct(v/S.modal_awal-1,1)})}</div>
+   <div class="card"><h3 style="margin-top:0">Equity backtest vs BTC/IDR buy &amp; hold</h3>${B?chart([{name:'Strategi (backtest)',color:'var(--brand)',pts:B.kurva||[]},{name:'BTC/IDR buy & hold',color:'var(--brand2)',pts:(B.benchmark_btc||{}).kurva||[],w:1.5}],{fmt:v=>pct(v/S.modal_awal-1,0)}):'<div class="empty">Belum ada hasil backtest.</div>'}</div>
+  </div>`;
+
+  // ---------------- tabel banding
+  const W=G?G.backtest_jendela:null,WT=W?W.trade:null,FB=F.benchmark_btc||{},BB=B?B.benchmark_btc||{}:{};
+  const row=(l,a,b,c,d,e)=>[l,a,b,c,d,e];
+  const pf=t=>t?(ok(t.profit_factor)?nf(t.profit_factor,2):`<span class="muted">${esc(t.profit_factor_catatan||'—')}</span>`):'—';
+  const pb=t=>t?(ok(t.porsi_biaya)?pct(t.porsi_biaya,1,false):`<span class="muted" title="${esc(t.porsi_biaya_catatan||'')}">n/a</span>`):'—';
+  const rows=[
+    row('Return total',B?pct(B.return_total):'—',W?pct(W.return_total):'—',pct(F.return_total),B?pct(BB.return_total):'—',pct(FB.return_total)),
+    row('CAGR',B?pct(B.cagr):'—','<span class="muted">tidak ditampilkan</span>','<span class="muted">tidak ditampilkan (10 hari)</span>',B?pct(BB.cagr):'—','<span class="muted">—</span>'),
+    row('Max drawdown',B?pct(B.max_drawdown):'—',W?pct(W.max_drawdown):'—',pct(F.max_drawdown),B?pct(BB.max_drawdown):'—',pct(FB.max_drawdown)),
+    row('Jumlah trade tertutup',BT?nf(BT.jumlah_trade):'—',WT?nf(WT.jumlah_trade):'—',nf(FT.jumlah_trade),'',''),
+    row('Win rate',BT?pct(BT.win_rate,1,false):'—',WT?pct(WT.win_rate,1,false):'—',pct(FT.win_rate,1,false),'',''),
+    row('Profit factor',pf(BT),pf(WT),pf(FT),'',''),
+    row('Rata-rata untung / trade',BT?rp(BT.rata_untung_idr)+' ('+pp(BT.rata_untung_pct)+')':'—',WT?rp(WT.rata_untung_idr):'—',rp(FT.rata_untung_idr)+' ('+pp(FT.rata_untung_pct)+')','',''),
+    row('Rata-rata rugi / trade',BT?rp(BT.rata_rugi_idr)+' ('+pp(BT.rata_rugi_pct)+')':'—',WT?rp(WT.rata_rugi_idr):'—',rp(FT.rata_rugi_idr)+' ('+pp(FT.rata_rugi_pct)+')','',''),
+    row('Laba kotor (di harga mid)',BT?rp(BT.laba_kotor_idr):'—',WT?rp(WT.laba_kotor_idr):'—',rp(FT.laba_kotor_idr),'',''),
+    row('Fee + spread + slippage',BT?rp(BT.biaya_total_idr):'—',WT?rp(WT.biaya_total_idr):'—',rp(FT.biaya_total_idr),'',''),
+    row('Porsi biaya',pb(BT),pb(WT),pb(FT),'',''),
+  ];
+  $('#banding').innerHTML=`<h2>Backtest vs forward test</h2><p class="sub">Metrik wajib. Trade dihitung dari pasangan order beli–jual (posisi_id); posisi yang masih terbuka tidak masuk statistik trade tetapi masuk equity.</p>
+  ${tbl(['Metrik','Backtest 3 tahun','Backtest jendela 10 hari','Forward test 10 hari','BTC B&amp;H (periode backtest)','BTC B&amp;H (forward)'],rows,[1,2,3,4,5])}
+  ${B&&B.return_tahunan?`<h3>Return backtest per tahun kalender</h3>${tbl(['Tahun','Return'],B.return_tahunan.map(y=>[y.tahun,`<span class="${cls(y.return)}">${pct(y.return)}</span>`]),[1])}`:''}
+  ${B?`<p class="note">Periode backtest: ${isoW((B.meta||{}).mulai_utc)} → ${isoW((B.meta||{}).selesai_utc)} · ${nf((B.meta||{}).n_candle)} candle · fee beli ${nf((B.meta||{}).fee_persen_beli,5)}% · jual ${nf((B.meta||{}).fee_persen_jual,5)}% · posisi terbuka di akhir: ${(B.posisi_terbuka||[]).length}</p>`:''}`;
+
+  // ---------------- gap
+  if(G){
+    const sg=G.sinyal,fr=G.fill_rata2_bps||{};
+    $('#gap').innerHTML=`<h2>Gap backtest vs forward (jendela & candle yang sama)</h2>
+    <p class="sub">Backtest dijalankan ulang pada jendela forward test dengan fungsi sinyal yang sama (<code>core/strategy.py</code>). Dibandingkan per pasangan × candle: sinyal masuk final (setelah filter rezim) dan sinyal keluar.</p>
+    <div class="grid">${kpi('Sinyal identik',pct(sg.persen_identik,1,false),nf(sg.identik)+' / '+nf(sg.dibandingkan))}${kpi('Hanya di backtest',nf(sg.hanya_backtest),'candle yang tidak diproses bot')}${kpi('Selisih return',pct(G.selisih_return),'forward − backtest jendela',cls(G.selisih_return))}${kpi('Selisih jumlah trade',nf(G.selisih_jumlah_trade),'forward − backtest jendela')}</div>
+    <h3>Dekomposisi harga fill bot terhadap harga sinyal (rata-rata, basis poin)</h3>
+    ${tbl(['Komponen','Bot (terukur di order book)','Asumsi backtest'],[['Keterlambatan jadwal (mid saat eksekusi − close sinyal)',nf(fr.bot_tunda_bps,1),'0 (diasumsikan eksekusi di close)'],['Setengah spread (best − mid)',nf(fr.bot_spread_bps,1),nf(fr.bt_spread_bps,1)],['Slippage (fill rata-rata − best)',nf(fr.bot_slip_bps,1),nf(fr.bt_slip_bps,1)]],[1,2])}
+    <h3>Per order</h3>
+    ${tbl(['Waktu bot','Pair','Sisi','Harga sinyal','Fill bot','Fill backtest','Selisih fill','Tunda bps','Spread bps','Slip bps'],(G.fill||[]).map(f=>[isoW(f.waktu_bot),f.pair.toUpperCase(),f.sisi,nf(f.harga_sinyal),nf(f.fill_bot,2),ok(f.fill_bt)?nf(f.fill_bt,2):'<span class="muted">tidak ada di backtest</span>',pp(f.selisih_fill_pct,3),nf(f.bot_tunda_bps,1),nf(f.bot_spread_bps,1),nf(f.bot_slip_bps,1)]),[3,4,5,6,7,8,9])}
+    <h3>Candle bersinyal atau berbeda</h3>
+    ${tbl(['Candle (waktu buka)','Pair','Cocok','Masuk bot / bt','Keluar bot / bt','Aksi bot','Aksi bt','Close bot / bt'],(sg.baris_penting||[]).map(r=>[WIB(r.candle_t),r.pair.toUpperCase(),r.cocok===true?badge('identik','ok'):r.cocok===false?badge('beda','bad'):badge(r.catatan||'—','warn'),`${r.bot_entry??'—'} / ${r.bt_entry??'—'}`,`${esc(r.bot_exit||'—')} / ${esc(r.bt_exit||'—')}`,esc(r.bot_aksi||'—'),esc(r.bt_aksi||'—'),ok(r.bot_close)?nf(r.bot_close)+' / '+nf(r.bt_close):'—']),[])}`;
+  } else $('#gap').innerHTML=`<h2>Gap backtest vs forward</h2><div class="empty">Akan terisi setelah <code>python backtest/run_backtest.py jendela</code> dijalankan (setelah forward test selesai dan candle ditarik ulang).</div>`;
+
+  // ---------------- operasional
+  const ks=O.kill_switch||[],dl=O.daily_loss_limit||[];
+  $('#ops').innerHTML=`<h2>Panel operasional</h2><p class="sub">Dihitung dari log <code>calls</code>, <code>errors</code>, <code>events</code>. Uptime = candle yang diproses sebelum candle berikutnya tutup ÷ jumlah candle selama forward test.</p>
+  <div class="grid">
+   ${kpi('Panggilan terjadwal',nf(O.panggilan_terjadwal),'jadwal menit '+esc((S.jadwal_cron_menit||[7]).join(','))+' tiap jam')}
+   ${kpi('Panggilan terjadwal terlaksana',nf(O.panggilan_terjadwal_terlaksana),'total semua sumber: '+nf(O.panggilan_terlaksana))}
+   ${kpi('Uptime candle',pct(O.uptime,1,false),nf(O.candle_tepat_waktu)+' / '+nf(O.candle_seharusnya))}
+   ${kpi('Error API',nf(O.error_api_total),nf(O.panggilan_dengan_error)+' panggilan terdampak',O.error_api_total?'warn':'')}
+   ${kpi('Kill switch',nf(ks.length)+' event',nf(O.panggilan_saat_kill_switch)+' panggilan saat aktif')}
+   ${kpi('Daily loss limit',nf(dl.length)+' kali','batas hari 00.00 WIB')}
+  </div>
+  <div class="two" style="margin-top:12px">
+   <div class="card"><h3 style="margin-top:0">Waktu</h3><dl class="kv">
+    <dt>Keterlambatan jadwal (median / maks)</dt><dd>${nf((O.keterlambatan_jadwal_detik||{}).median/60,1)} / ${nf((O.keterlambatan_jadwal_detik||{}).maks/60,1)} menit</dd>
+    <dt>Jeda candle tutup → diproses (median / maks)</dt><dd>${nf((O.tunda_proses_detik||{}).median/60,1)} / ${nf((O.tunda_proses_detik||{}).maks/60,1)} menit</dd>
+    <dt>Durasi panggilan (median / maks)</dt><dd>${nf((O.durasi_panggilan_detik||{}).median,1)} / ${nf((O.durasi_panggilan_detik||{}).maks,1)} detik (batas 300)</dd>
+    <dt>Status panggilan</dt><dd>${Object.entries(O.panggilan_per_status||{}).map(([k,v])=>esc(k)+': '+v).join(' · ')||'—'}</dd>
+    <dt>Sumber panggilan</dt><dd>${Object.entries(O.panggilan_per_sumber||{}).map(([k,v])=>esc(k)+': '+v).join(' · ')||'—'}</dd>
+    <dt>Candle tidak diproses</dt><dd>${(O.candle_tidak_diproses||[]).length?(O.candle_tidak_diproses||[]).map(WIB).join(', '):'tidak ada'}</dd></dl></div>
+   <div class="card"><h3 style="margin-top:0">Error &amp; event</h3><dl class="kv">
+    ${Object.entries(O.error_per_jenis||{}).map(([k,v])=>`<dt>error: ${esc(k)}</dt><dd>${v}</dd>`).join('')||'<dt>error</dt><dd>tidak ada</dd>'}
+    ${Object.entries(O.event_per_jenis||{}).map(([k,v])=>`<dt>event: ${esc(k)}</dt><dd>${v}</dd>`).join('')}</dl></div>
+  </div>
+  <h3>Kill switch &amp; daily loss limit</h3>
+  ${tbl(['Waktu','Jenis','Keterangan','Sumber'],[...ks,...dl].map(e=>[isoW(e.waktu_utc),esc(e.jenis),esc(e.keterangan||e.nilai||''),esc(e.sumber||'tick')]))}
+  <h3>Error terakhir</h3>
+  ${tbl(['Waktu','Jenis','Konteks','Percobaan','Detail'],(O.error_terakhir||[]).slice().reverse().map(e=>[isoW(e.waktu_utc),esc(e.jenis),esc(e.konteks||''),nf(e.percobaan),`<span class="mono">${esc((e.detail||'').slice(0,90))}</span>`]))}`;
+
+  // ---------------- spread
+  const SP=R.spread||{},A=SP.asumsi_backtest||{},All=SP.seluruh_snapshot||{},Fw=SP.snapshot_forward||{};
+  const bps=x=>ok(x)?nf(x*1e4,1):'—';
+  $('#biaya').innerHTML=`<h2>Spread &amp; biaya eksekusi</h2><p class="sub">Asumsi backtest berasal dari snapshot order book sampai freeze (<code>config/costs.json</code>). Dibandingkan dengan seluruh snapshot (persiapan + forward). Ukuran order slippage ${rp(SP.ukuran_order_idr)}. Fee taker dipakai per sisi = maks(halaman resmi: beli ${nf(S.fee_taker_beli_persen_resmi,5)}%, jual ${nf(S.fee_taker_jual_persen_resmi,5)}%; /api/pairs ${nf(S.fee_api_taker_persen_dicatat,4)}%). ${esc(S.fee_rincian||'')}</p>
+  ${tbl(['Pair','½ spread asumsi BT (bps)','½ spread seluruh snapshot','½ spread forward','Slip beli BT / semua','Slip jual BT / semua','Spread p90 semua','Snapshot (BT / semua)'],Object.keys(All).map(p=>{const a=A[p]||{},b=All[p]||{},c=Fw[p]||{};return [p.toUpperCase(),bps(a.half_spread_median),bps(b.half_spread_median),bps(c.half_spread_median),bps(a.slip_buy_median)+' / '+bps(b.slip_buy_median),bps(a.slip_sell_median)+' / '+bps(b.slip_sell_median),bps(b.spread_p90),nf(a.n_valid)+' / '+nf(b.n_valid)]}),[1,2,3,4,5,6,7])}
+  <p class="note">Sumber fee: ${esc(S.fee_sumber_url||'')} (akses ${esc(S.fee_tanggal_akses||'')}); /api/pairs akses ${esc(S.fee_api_tanggal_akses||'')}. Minimum order ${rp(S.min_order_idr)}.</p>`;
+
+  // ---------------- trade & log
+  const tr=F.daftar_trade||[],op=F.posisi_terbuka||[],calls=O.panggilan_terakhir||[];
+  $('#log').innerHTML=`<h2>Trade &amp; log forward test</h2>
+  <h3>Trade tertutup</h3>
+  ${tbl(['Pair','Masuk','Keluar','Qty','Harga masuk','Harga keluar','Laba bersih','Return','Fee','Spread','Slippage','Alasan keluar'],tr.map(t=>[t.pair.toUpperCase(),isoW(t.masuk_utc),isoW(t.keluar_utc),nf(t.qty,6),nf(t.harga_masuk,2),nf(t.harga_keluar,2),`<span class="${cls(t.laba_bersih_idr)}">${rp(t.laba_bersih_idr)}</span>`,`<span class="${cls(t.return_pct)}">${pp(t.return_pct)}</span>`,rp(t.fee_idr),rp(t.spread_idr),rp(t.slippage_idr),esc(t.alasan_keluar)]),[3,4,5,6,7,8,9,10])}
+  <h3>Posisi terbuka</h3>
+  ${tbl(['Pair','Masuk','Qty','Harga masuk','Biaya masuk'],op.map(o=>[o.pair.toUpperCase(),isoW(o.masuk_utc),nf(o.qty,6),nf(o.harga_masuk,2),rp(o.biaya_masuk_idr)]),[2,3,4])}
+  <h3>Equity harian (panggilan pertama setelah 00.00 WIB)</h3>
+  ${tbl(['Tanggal WIB','Diambil','Equity','Kas','Nilai posisi','Posisi'],(F.equity_harian||[]).map(e=>[e.tanggal_wib,isoW(e.waktu_utc),rp(e.equity),rp(e.kas),rp(e.nilai_posisi),nf(e.n_posisi)]),[2,3,4,5])}
+  <h3>30 panggilan terakhir</h3>
+  ${tbl(['Mulai','Sumber','Status','Candle diproses','Equity','Posisi','Request','Error','Durasi'],calls.slice().reverse().map(c=>[isoW(c.mulai_utc),esc(c.sumber),c.status==='ok'?badge('ok','ok'):c.status==='error'?badge('error','bad'):badge(c.status,'info'),c.candle_diproses_utc?isoW(c.candle_diproses_utc):'—',rp(c.equity),nf(c.n_posisi),nf(c.n_request),nf(c.n_error_api),nf(c.durasi_s,1)+' s']),[4,5,6,7,8])}
+  <p class="note">Log mentah lengkap: <code>logs/*.jsonl</code> (calls ${nf((R.jumlah_baris_log||{}).calls)}, signals ${nf((R.jumlah_baris_log||{}).signals)}, orders ${nf((R.jumlah_baris_log||{}).orders)}, equity ${nf((R.jumlah_baris_log||{}).equity)}, errors ${nf((R.jumlah_baris_log||{}).errors)}, events ${nf((R.jumlah_baris_log||{}).events)}, snapshots ${nf((R.jumlah_baris_log||{}).snapshots)} baris).</p>`;
+
+  // ---------------- aturan & rumus
+  const P=[['Timeframe',S.timeframe_menit+' menit (candle tertutup saja)'],['Universe',(S.pairs||[]).join(', ')],['Filter rezim',S.pair_rezim+' close > SMA'+S.sma_tren],
+    ['Masuk','close > high tertinggi '+S.breakout_n+' bar sebelumnya, close > SMA'+S.sma_tren+', SMA'+S.sma_tren+' naik > '+pct(S.slope_min,1,false)+' dalam '+S.slope_lookback+' bar, ATR'+S.atr_len+'/close < '+S.atr_rasio_max+' × rata-rata '+S.atr_rasio_len+' bar'],
+    ['Keluar','close ≤ close sinyal − '+S.stop_atr_mult+'×ATR sinyal, atau setelah '+S.hold_bars+' bar'],
+    ['Sizing','min(equity/'+S.maks_posisi+', '+pct(S.maks_porsi_per_posisi,0,false)+' equity), maks '+S.maks_posisi+' posisi'],
+    ['Daily loss limit',pct(S.daily_loss_limit,1,false)+' dari equity awal hari WIB'],['Eksekusi','beli di ask, jual di bid, habiskan level order book; fee taker; min order '+rp(S.min_order_idr)],
+    ['Validasi data','candle basi > '+'2× timeframe, candle hilang, harga/volume nol, order book kosong, spread > '+pct(S.maks_spread,0,false)+' → tidak membuka posisi']];
+  $('#aturan').innerHTML=`<h2>Aturan (beku) &amp; rumus</h2><p class="sub">Dibaca langsung dari <code>config/strategy.json</code> yang dipakai bot dan backtest. Hash parameter: <code>${esc(R.param_hash)}</code>.</p>
+  ${tbl(['Komponen','Aturan'],P.map(r=>[`<b>${r[0]}</b>`,`<span style="white-space:normal">${esc(r[1])}</span>`]))}
+  <h3>Rumus metrik</h3>${tbl(['Metrik','Rumus'],Object.entries(R.rumus||{}).map(([k,v])=>[esc(k),`<span class="mono" style="white-space:normal">${esc(v)}</span>`]))}
+  <p class="note">Asal strategi: <b>Struktur Breakout + Keluar Waktu 30 Hari</b> (UTS, saham Kompas100 harian). Perubahan untuk kripto dicatat di <code>STRATEGI.md</code>.</p>
+  <p class="note">Hitung ulang: <code>python tools/storage_admin.py export</code> lalu <code>python hitung_ulang.py --banding report_vercel.json</code>. Skrip mencetak setiap angka dan membandingkannya dengan JSON dari <code>/api/report</code>.</p>`;
+}
+
+function renderSiap(R){
+  const S=R.strategi||{},O=R.operasional||{},n=R.jumlah_baris_log||{},G=R.gap,sp=(R.spread||{}).asumsi_backtest;
+  const st=(okv,txt,det,w)=>`<div><b class="i">${okv?'✅':w?'⏳':'⬜'}</b><span><b>${txt}</b><br><span class="muted">${det}</span></span></div>`;
+  const items=[
+   ['Kecocokan backtest–forward (25%)',[
+     st(!!G,'Backtest jendela 10 hari dijalankan ulang',G?`sinyal identik ${pct(G.sinyal.persen_identik,1,false)} (${nf(G.sinyal.identik)}/${nf(G.sinyal.dibandingkan)})`:'jalankan backtest/run_backtest.py jendela setelah forward selesai',true),
+     st((R.param_hash_di_log||[]).length===1,'Satu hash parameter di seluruh log',(R.param_hash_di_log||[]).join(', ')||'belum ada log',true)]],
+   ['Eksekusi realistis & risk (25%)',[
+     st(ok(S.fee_taker_beli_persen_resmi)&&!String(S.fee_sumber_url||'').startsWith('ISI'),'Fee resmi + URL + tanggal akses diisi',ok(S.fee_taker_beli_persen_resmi)?'beli '+nf(S.fee_taker_beli_persen_resmi,5)+'% · jual '+nf(S.fee_taker_jual_persen_resmi,5)+'%':'isi config/strategy.json'),
+     st(!!sp,'Spread & slippage backtest dari snapshot terukur',sp?Object.keys(sp).length+' pasangan di config/costs.json':'jalankan tools/cost_model.py'),
+     st(true,'Daily loss limit, kill switch, idempotency, retry di kode','core/bot.py · bukti di log events/calls')]],
+   ['Stabilitas & log (20%)',[
+     st((n.calls||0)>0,'Bot berjalan dan mencatat panggilan',nf(n.calls||0)+' panggilan, '+nf(n.snapshots||0)+' snapshot'),
+     st(ok(O.uptime)&&O.uptime>=.95,'Uptime ≥ 95%',ok(O.uptime)?pct(O.uptime,1,false):'belum ada candle forward',true)]],
+   ['Keamanan & kode (15%)',[
+     st(true,'Endpoint dilindungi CRON_SECRET; secret hanya di env','.env di .gitignore; .env.example kosong'),
+     st(true,'Backtest & bot memakai fungsi sinyal yang sama','core/strategy.py')]],
+   ['Dashboard & dokumentasi (15%)',[
+     st(!!R.backtest,'Backtest ≥ 3 tahun',R.backtest?`${isoW((R.backtest.meta||{}).mulai_utc)} → ${isoW((R.backtest.meta||{}).selesai_utc)}`:'jalankan backtest/run_backtest.py penuh'),
+     st(false,'hitung_ulang.py = dashboard; README & REFLEKSI lengkap','cek dengan hitung_ulang.py --banding report_vercel.json',true)]]];
+  $('#siap').innerHTML=`<h2>🧭 Kesiapan menurut rubrik</h2><p class="sub">Status dibaca dari report ini (bukan diisi manual). ✅ terpenuhi · ⏳ menunggu forward test · ⬜ belum dikerjakan.</p>
+  <div class="two">${items.map(([h,xs])=>`<div class="card"><h3 style="margin-top:0">${h}</h3><div class="ck">${xs.join('')}</div></div>`).join('')}</div>`;
+  $('#catatan').innerHTML=`<h2>📝 Keterbatasan, pelajaran, dan penggunaan AI</h2><div class="card"><ul style="margin:0;padding-left:18px">
+   <li>Strategi berasal dari UTS (saham harian) yang dipilih dari 947 kombinasi; risiko overfitting tetap ada. Parameter sengaja tidak dioptimasi ulang untuk kripto.</li>
+   <li>Stop ${nf(S.stop_atr_mult,1)}×ATR ditambahkan karena versi UTS tanpa stop-loss (trade terburuk ≈ −40%).</li>
+   <li>Backtest memakai close ± spread & slippage median dari snapshot; keterlambatan jadwal tidak dimodelkan dan dibahas sebagai sumber selisih.</li>
+   <li>Universe dipilih dari likuiditas di awal backtest, tetapi kandidat berasal dari daftar pasangan saat ini (sisa survivorship bias).</li>
+   <li>Penggunaan AI: membantu menyusun kode bot, backtest, dashboard, dan dokumentasi. Semua angka berasal dari data Indodax dan log bot, dihitung ulang oleh <code>hitung_ulang.py</code>.</li>
+  </ul></div>`;
+}
+
+const t=$('#theme');t.onclick=()=>{const r=document.documentElement,cur=r.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');r.dataset.theme=cur==='dark'?'light':'dark';try{localStorage.setItem('tema',r.dataset.theme)}catch(e){}};
+try{const s=localStorage.getItem('tema');if(s)document.documentElement.dataset.theme=s}catch(e){}
+
+const go=R=>{render(R);renderSiap(R)};
+if(window.__REPORT__) go(window.__REPORT__);
+else fetch('/api/report').then(r=>r.json()).then(R=>{if(R.error)throw new Error(R.error);go(R)}).catch(e=>{$('#status').className='banner bad';$('#status').textContent='Gagal memuat /api/report: '+e.message});
+})();
+</script>
+</body>
+</html>

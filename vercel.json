@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "outputDirectory": "public",
+  "functions": {
+    "api/tick.py":   { "maxDuration": 300, "includeFiles": "{core,config}/**" },
+    "api/report.py": { "maxDuration": 60,  "includeFiles": "{core,config,results}/**" },
+    "api/kill.py":   { "maxDuration": 30,  "includeFiles": "{core,config}/**" }
+  },
+  "crons": [
+    { "path": "/api/tick?sumber=vercel", "schedule": "37 0 * * *" }
+  ]
+}

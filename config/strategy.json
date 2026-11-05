@@ -1,0 +1,44 @@
+{
+  "_catatan": "SEMUA aturan, parameter, dan universe ada di file ini. Setelah commit freeze, file ini TIDAK BOLEH diubah. Bot dan backtest membaca file yang sama.",
+  "versi": "UAS-1.0",
+  "nama": "Struktur Breakout + Keluar Waktu (versi kripto 4 jam)",
+
+  "timeframe_menit": 240,
+  "pairs": ["btcidr", "ethidr", "xrpidr", "dogeidr", "solidr"],
+  "pair_rezim": "btcidr",
+
+  "breakout_n": 55,
+  "sma_tren": 100,
+  "slope_lookback": 20,
+  "slope_min": 0.02,
+  "atr_len": 14,
+  "atr_rasio_len": 60,
+  "atr_rasio_max": 0.94,
+  "hold_bars": 30,
+  "stop_atr_mult": 3.0,
+
+  "maks_posisi": 3,
+  "maks_porsi_per_posisi": 0.30,
+  "daily_loss_limit": 0.03,
+  "modal_awal": 100000000,
+
+  "min_order_idr": 25000,
+  "maks_spread": 0.02,
+  "maks_umur_candle_x_tf": 2,
+
+  "fee_taker_beli_persen_resmi": 0.20555,
+  "fee_taker_jual_persen_resmi": 0.41555,
+  "fee_rincian": "IDR Market (PRO) taker. BELI 0.20555% = service fee 0.2% + pajak 0% + bourse fee 0.00555%. JUAL 0.41555% = service fee 0.2% + pajak 0.21% + bourse fee 0.00555%.",
+  "fee_sumber_url": "ISI: URL halaman Transaction Information / Trading Fee di indodax.com",
+  "fee_tanggal_akses": "2026-11-05",
+  "fee_api_taker_persen_dicatat": 0.2,
+  "fee_api_tanggal_akses": "2026-11-05 (trade_fee_percent_taker dari https://indodax.com/api/pairs)",
+
+  "backtest_mulai": "2023-11-04",
+  "backtest_selesai": "2026-11-04",
+  "ukuran_order_slippage_idr": 33000000,
+
+  "jadwal_cron_menit": [7],
+  "forward_mulai": "ISI saat freeze, format ISO UTC, mis. 2026-11-05T05:00:00Z",
+  "forward_selesai": "2026-11-14T05:00:00Z"
+}

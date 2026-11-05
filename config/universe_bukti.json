@@ -1,0 +1,219 @@
+{
+ "dibuat_utc": "2026-11-04T18:28:38Z",
+ "jendela_ukur": [
+  "2023-10-05",
+  "2023-11-04"
+ ],
+ "kriteria": "Pilih universe dengan kriteria likuiditas yang diukur pada AWAL periode backtest (anti survivorship).\n\nKriteria (tertulis di config/universe_bukti.json):\n  1. Pasangan IDR, bukan stablecoin/aset fiat-pegged.\n  2. Sudah punya data harian Indodax pada jendela pengukuran (30 hari sebelum backtest_mulai).\n  3. Peringkat = median nilai transaksi harian (IDR) pada jendela itu. Ambil K teratas.\n  4. Tidak ada hari tanpa transaksi (volume 0) lebih dari 2 pada jendela itu.",
+ "satuan_volume": "koin",
+ "bukti_satuan": {
+  "vol_idr_ticker": 26442346889.0,
+  "v_x_close": 25566293833.0992,
+  "v_mentah": 17.57510465
+ },
+ "stablecoin_dikecualikan": [
+  "bidr",
+  "busd",
+  "dai",
+  "eurt",
+  "fdusd",
+  "idrt",
+  "pyusd",
+  "tusd",
+  "usdc",
+  "usdd",
+  "usde",
+  "usdt",
+  "xsgd"
+ ],
+ "peringkat": [
+  {
+   "pair": "btcidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 11838790206.731806
+  },
+  {
+   "pair": "ethidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 3915765163.383215
+  },
+  {
+   "pair": "xrpidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 3603138215.787021
+  },
+  {
+   "pair": "dogeidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 1816646656.7321548
+  },
+  {
+   "pair": "solidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 938299770.2443287
+  },
+  {
+   "pair": "trxidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 900864715.9023094
+  },
+  {
+   "pair": "adaidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 837083375.6516515
+  },
+  {
+   "pair": "bnbidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 671168651.1286206
+  },
+  {
+   "pair": "stikidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 628592369.8013582
+  },
+  {
+   "pair": "veloidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 455833503.5575329
+  },
+  {
+   "pair": "ltcidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 331098577.17339
+  },
+  {
+   "pair": "dotidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 241901726.65137458
+  },
+  {
+   "pair": "linkidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 216046413.92934048
+  },
+  {
+   "pair": "hbaridr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 185826608.19160214
+  },
+  {
+   "pair": "zilidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 160925911.3288765
+  },
+  {
+   "pair": "orbsidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 122867685.15549272
+  },
+  {
+   "pair": "sandidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 120676651.29547656
+  },
+  {
+   "pair": "grtidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 79911952.77597904
+  },
+  {
+   "pair": "wavesidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 77096821.780218
+  },
+  {
+   "pair": "wemixidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 71618820.95468357
+  },
+  {
+   "pair": "avaxidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 64526000.059648484
+  },
+  {
+   "pair": "manaidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 64456942.79075479
+  },
+  {
+   "pair": "depidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 62402770.67996839
+  },
+  {
+   "pair": "hotidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 60743832.57866394
+  },
+  {
+   "pair": "atomidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 57140556.69736016
+  },
+  {
+   "pair": "metaidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 54313126.42640323
+  },
+  {
+   "pair": "algoidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 51228506.748721905
+  },
+  {
+   "pair": "dgbidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 50114256.849868014
+  },
+  {
+   "pair": "galagamesidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 42429275.820336185
+  },
+  {
+   "pair": "ckbidr",
+   "hari_data": 30,
+   "hari_volume_nol": 0,
+   "median_nilai_harian": 40055386.9721782
+  }
+ ],
+ "terpilih": [
+  "btcidr",
+  "ethidr",
+  "xrpidr",
+  "dogeidr",
+  "solidr"
+ ],
+ "keterbatasan": "Kandidat dari /api/pairs saat ini; pasangan yang sudah delisting tidak ikut."
+}
