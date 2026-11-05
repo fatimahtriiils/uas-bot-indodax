@@ -1,0 +1,84 @@
+{
+ "param_hash": "0e2cb6f315d4dbef",
+ "mulai_utc": "2023-11-04T00:00:00Z",
+ "selesai_utc": "2026-11-04T00:00:00Z",
+ "n_candle": 6576,
+ "fee_persen_beli": 0.20555,
+ "fee_persen_jual": 0.41555,
+ "biaya": {
+  "dibuat_utc": "2026-11-05T07:21:08Z",
+  "snapshot_sampai": "2026-11-05T08:00:00Z",
+  "ukuran_order_idr": 33000000,
+  "file_sumber": [
+   "data\\snapshots\\laptop_20261104.jsonl",
+   "data\\snapshots\\laptop_20261105.jsonl"
+  ],
+  "metode": "per snapshot: half_spread=(ask-bid)/2/mid; slip_buy = harga rata2 beli Rp ukuran_order (habiskan ask) / best ask - 1; slip_sell = 1 - harga rata2 jual (ukuran_order/mid koin) / best bid. Diambil median per pasangan.",
+  "pairs": {
+   "btcidr": {
+    "n_snapshot": 34,
+    "n_valid": 34,
+    "half_spread_median": 0.0001251279017109692,
+    "spread_median": 0.0002502558034219384,
+    "spread_p90": 0.0015554644522854247,
+    "slip_buy_median": 4.328692824628888e-06,
+    "slip_sell_median": 3.951324945017376e-07,
+    "ts_awal": 1793831126.171,
+    "ts_akhir": 1793862671.571
+   },
+   "ethidr": {
+    "n_snapshot": 34,
+    "n_valid": 34,
+    "half_spread_median": 0.00010815464501255779,
+    "spread_median": 0.00021630929002511558,
+    "spread_p90": 0.0010227388947601677,
+    "slip_buy_median": 0.00017084091499819376,
+    "slip_sell_median": 0.0,
+    "ts_awal": 1793831126.583,
+    "ts_akhir": 1793862671.908
+   },
+   "xrpidr": {
+    "n_snapshot": 34,
+    "n_valid": 34,
+    "half_spread_median": 0.000263674226106304,
+    "spread_median": 0.000527348452212608,
+    "spread_p90": 0.0011394087734475555,
+    "slip_buy_median": 0.0,
+    "slip_sell_median": 0.0,
+    "ts_awal": 1793831126.914,
+    "ts_akhir": 1793862672.334
+   },
+   "dogeidr": {
+    "n_snapshot": 34,
+    "n_valid": 34,
+    "half_spread_median": 0.0007145409986725213,
+    "spread_median": 0.0014290819973450425,
+    "spread_p90": 0.0021559468199784403,
+    "slip_buy_median": 0.0,
+    "slip_sell_median": 0.0003007277012536669,
+    "ts_awal": 1793831127.359,
+    "ts_akhir": 1793862672.727
+   },
+   "solidr": {
+    "n_snapshot": 34,
+    "n_valid": 34,
+    "half_spread_median": 0.0005777477918203979,
+    "spread_median": 0.0011554955836407957,
+    "spread_p90": 0.0016643340120021765,
+    "slip_buy_median": 0.0,
+    "slip_sell_median": 0.0,
+    "ts_awal": 1793831127.743,
+    "ts_akhir": 1793862673.138
+   }
+  }
+ },
+ "pairs": [
+  "btcidr",
+  "ethidr",
+  "xrpidr",
+  "dogeidr",
+  "solidr"
+ ],
+ "timeframe_menit": 240,
+ "posisi_terbuka": []
+}

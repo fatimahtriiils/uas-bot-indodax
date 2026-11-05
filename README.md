@@ -54,7 +54,7 @@ python backtest/run_backtest.py penuh             # → results/backtest/
 3. Vercel → Settings → Environment Variables: `CRON_SECRET` = string acak ≥32 karakter (`python -c "import secrets;print(secrets.token_hex(24))"`). Redeploy.
 4. GitHub → Settings → Secrets → Actions: `CRON_SECRET` (sama) dan `TICK_URL` = `https://<app>.vercel.app/api/tick`.
 5. Uji koneksi: Actions → tick-bot → Run workflow. Buka `https://<app>.vercel.app` (dashboard) dan `/api/report`.
-6. Cadangan (opsional): cron-job.org memanggil `TICK_URL?sumber=cronjob` menit ke-37 dengan header `Authorization: Bearer <CRON_SECRET>`. Idempotency mencegah pembelian ganda.
+6. Penjadwal utama: cron-job.org memanggil `TICK_URL?sumber=cronjob` pada menit ke-7 dan ke-37 tiap jam dengan header `Authorization: Bearer <CRON_SECRET>`. GitHub Actions (menit ke-7) menjadi cadangan karena jadwalnya sering terlambat/terlewat. Idempotency mencegah pembelian ganda; dashboard menghitung satu slot jadwal terlaksana bila ada panggilan dari penjadwal mana pun dalam 30 menit.
 
 ## Freeze & forward test
 

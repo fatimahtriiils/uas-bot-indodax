@@ -113,12 +113,16 @@ def build_report(cfg, logs, bt=None, btw=None, costs=None, now_ts=None, info=Non
     exp = [t for t in exp if t + 2 * tf <= now_ts or t in on_time]   # tenggat (candle berikutnya tutup) sudah lewat
     proc = [t for t in exp if t in on_time]
     delays = [c["mulai_ts"] - (c["candle_diproses"] + tf) for c in calls if c.get("candle_diproses") is not None]
-    sched_delay = []
-    for c in calls:
-        if c.get("sumber") in ("github", "cron"):
-            prev = [t for t in sched if t <= c["mulai_ts"]]
-            if prev:
-                sched_delay.append(c["mulai_ts"] - prev[-1])
+    # Slot terjadwal dianggap terlaksana bila ada panggilan dari penjadwal mana pun
+    # (cron-job.org / GitHub Actions) dalam 30 menit setelah slot. Panggilan dobel tidak dihitung dua kali.
+    sumber_jadwal = ("github", "cron", "cronjob")
+    jc = sorted(c["mulai_ts"] for c in calls if c.get("sumber") in sumber_jadwal)
+    sched_delay, slot_ok = [], 0
+    for t in sched:
+        hit = [x for x in jc if t <= x < t + 1800]
+        if hit:
+            slot_ok += 1
+            sched_delay.append(hit[0] - t)
     by_status, by_src = {}, {}
     for c in calls:
         by_status[c.get("status")] = by_status.get(c.get("status"), 0) + 1
@@ -132,7 +136,8 @@ def build_report(cfg, logs, bt=None, btw=None, costs=None, now_ts=None, info=Non
     R["operasional"] = {
         "panggilan_terjadwal": len(sched),
         "panggilan_terlaksana": len(calls),
-        "panggilan_terjadwal_terlaksana": by_src.get("github", 0) + by_src.get("cron", 0),
+        "panggilan_terjadwal_terlaksana": slot_ok,
+        "definisi_terlaksana": "slot jadwal (menit jadwal_cron_menit tiap jam) yang diikuti panggilan penjadwal dalam 30 menit",
         "panggilan_per_sumber": by_src, "panggilan_per_status": by_status,
         "candle_seharusnya": len(exp), "candle_tepat_waktu": len(proc),
         "uptime": (len(proc) / len(exp)) if exp else None,
