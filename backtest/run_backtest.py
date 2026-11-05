@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from core.backtest_engine import run_backtest  # noqa: E402
 from core.config import ROOT, load_config, load_costs  # noqa: E402
 from core.data import load_candles  # noqa: E402
+from core.execution import QTY_DEC  # noqa: E402
 from core.report import parse_iso  # noqa: E402
 from core.results_io import save_results  # noqa: E402
 from tools.fetch_history import to_ts  # noqa: E402
@@ -25,15 +26,7 @@ def main():
         sys.exit("config/costs.json belum ada. Jalankan tools/cost_model.py setelah snapshot terkumpul.")
     pairs = list(dict.fromkeys(cfg["pairs"] + [cfg["pair_rezim"]]))
     candles = {p: load_candles(p, cfg["timeframe_menit"]) for p in pairs}
-    qty_dec = {}
-    pm = os.path.join(ROOT, "config", "pairs_meta.json")
-    if os.path.exists(pm):
-        meta = json.load(open(pm))
-        for p in pairs:
-            try:
-                qty_dec[p] = int((meta.get(p) or {}).get("volume_precision"))
-            except (TypeError, ValueError):
-                pass
+    qty_dec = {p: QTY_DEC for p in pairs}     # sama dengan bot (lihat core/execution.py)
     if mode == "penuh":
         a, b, out_dir, sig = to_ts(cfg["backtest_mulai"]), to_ts(cfg["backtest_selesai"]), "results/backtest", False
     elif mode == "jendela":
