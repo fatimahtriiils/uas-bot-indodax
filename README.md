@@ -6,11 +6,32 @@ Bot long-only yang membaca harga dan order book **asli** Indodax (API publik, ta
 **simulasi** di bid/ask, dan mencatat setiap keputusan. Semua angka dashboard dihitung oleh `core/report.py` dari log mentah;
 `hitung_ulang.py` menghasilkan ulang angka yang sama secara offline.
 
-- Link Vercel: ISI
-- Link repositori: ISI
-- Commit freeze: ISI hash · ISI waktu (WIB)
+- Link Vercel (dashboard live): https://uas-bot-indodax.vercel.app
+- Link repositori: https://github.com/fatimahtriiils/uas-bot-indodax
+- Commit freeze: `18c7780d08b0892e1222913459121fc25a58aaf5`, 5 November 2026 14.44.12 WIB, sudah di-push sebelum forward test dimulai
 - Strategi & catatan perubahan dari UTS: [STRATEGI.md](STRATEGI.md)
 - Refleksi: [REFLEKSI.md](REFLEKSI.md)
+
+## Freeze dan forward test
+
+| | |
+|---|---|
+| Aturan, parameter, universe | `config/strategy.json` pada commit freeze (hash parameter `0e2cb6f315d4dbef`, tercatat di setiap baris log `calls`) |
+| Universe | BTC/IDR, ETH/IDR, XRP/IDR, DOGE/IDR, SOL/IDR; bukti kriteria di `config/universe_bukti.json` |
+| Forward test mulai | 5 November 2026 15.00 WIB (`forward_mulai` = 2026-11-05T08:00:00Z, waktu tutup candle 4 jam) |
+| Forward test selesai | 14 November 2026 12.00 WIB (`forward_selesai` = 2026-11-14T05:00:00Z) |
+| Penjadwal | cron-job.org menit ke-7 dan ke-37 tiap jam (utama), GitHub Actions menit ke-7 (cadangan) |
+
+**Keterlambatan freeze.** Jadwal soal menetapkan freeze Rabu 4 November 2026 12.00 WIB. Freeze baru dilakukan
+Kamis 5 November 2026 14.44 WIB (commit di atas), sehingga forward test berjalan sekitar 8,9 hari, bukan 10 hari.
+Waktu sebenarnya dicatat apa adanya; tidak ada riwayat commit yang ditulis ulang.
+
+**Perubahan setelah freeze** (tidak mengubah aturan, parameter, maupun universe; dicatat di log `events` dengan jenis `perbaikan_bug`):
+- Tampilan dashboard dan panel "sinyal terakhir" (`public/index.html`, `core/report.py`).
+- 9 Nov 2026, perbaikan bug: pada sebagian panggilan Indodax menolak semua request dari Vercel (HTTP 403). Sebelumnya bot
+  tetap menandai candle itu sebagai sudah diproses tanpa data, sehingga panggilan berikutnya tidak mencoba lagi. Sekarang
+  candle tidak ditandai selesai bila data gagal diambil (status `data_gagal_dicoba_lagi`), dan dashboard tidak lagi
+  menghitung candle tanpa data sebagai tepat waktu (`core/bot.py`, `core/report.py`). Aturan trading tidak berubah.
 
 ## Struktur
 
@@ -31,7 +52,7 @@ public/index.html        dashboard (Vercel) — juga template file offline
 hitung_ulang.py          hitung ulang semua angka dari logs/ → dist/dashboard_offline.html
 backtest/run_backtest.py backtest penuh (≥3 tahun) & backtest jendela forward test
 tools/                   tarik data, pilih universe, snapshot order book, model biaya, admin storage
-tests/test_bot.py        uji paritas sinyal bot vs backtest, idempotency, kill switch, retry, order book
+tests/test_bot.py        uji paritas sinyal bot vs backtest, idempotency, kill switch, daily loss limit, retry, order book
 logs/                    log mentah forward test (hasil ekspor) — ikut dikumpulkan
 results/                 hasil backtest (jsonl) — ikut dikumpulkan
 ```
@@ -78,8 +99,20 @@ Kumpulkan: ZIP repo (tanpa `.env`), `dist/dashboard_offline.html`, link Vercel, 
 Secret hanya di Environment Variables Vercel / GitHub Secrets / `.env` lokal (di-.gitignore). `.env.example` tanpa isi.
 `/api/tick` dan `/api/kill` menolak permintaan tanpa `Authorization: Bearer <CRON_SECRET>` (dan menolak bila secret < 16 karakter).
 
-## Sumber resmi (isi tanggal akses)
-- API publik Indodax: https://github.com/btcid/indodax-official-api-docs — akses ISI
-- Rincian biaya transaksi: ISI URL help.indodax.com — akses ISI
-- /api/pairs (`trade_fee_percent_taker`, `trade_min_base_currency`): https://indodax.com/api/pairs — akses ISI
-- Vercel Cron, Functions, Storage: vercel.com/docs/cron-jobs/usage-and-pricing, /functions/limitations, /storage — akses ISI
+## Eksekusi: fee, minimum order, pembulatan
+
+| Sumber | Nilai | URL | Diakses |
+|---|---|---|---|
+| Halaman resmi (IDR Market PRO, taker) | beli 0,20555% (service 0,2% + pajak 0% + bourse 0,00555%); jual 0,41555% (service 0,2% + pajak 0,21% + bourse 0,00555%) | https://indodax.com/profile, bagian Trading Fee (perlu login; screenshot `docs/fee_indodax_2026-11-05.png`) | 5 Nov 2026 |
+| `/api/pairs` | `trade_fee_percent_taker` = 0,2; `trade_min_base_currency` = 10000 | https://indodax.com/api/pairs | 5 Nov 2026 |
+
+- Fee yang dipakai per sisi = yang lebih mahal: **beli 0,20555%, jual 0,41555%**.
+- Minimum order: Rp25.000 (lebih ketat daripada Rp10.000 di `/api/pairs`).
+- Harga fill diambil langsung dari level order book (beli di ask, jual di bid, menghabiskan level), sehingga selalu
+  mengikuti kenaikan harga yang berlaku. Bot tidak memasang limit order.
+- Kuantitas dibulatkan ke bawah ke 8 desimal. `/api/pairs` mengembalikan `volume_precision` = 0 untuk semua pasangan,
+  padahal koin diperdagangkan pecahan, sehingga field itu tidak dipakai (lihat `core/execution.py`).
+
+## Sumber resmi
+- API publik Indodax: https://github.com/btcid/indodax-official-api-docs (ISI tanggal akses)
+- Vercel Cron, Functions, Storage: https://vercel.com/docs/cron-jobs/usage-and-pricing, https://vercel.com/docs/functions/limitations, https://vercel.com/docs/storage (ISI tanggal akses)

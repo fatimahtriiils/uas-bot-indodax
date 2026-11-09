@@ -72,7 +72,8 @@ def build_report(cfg, logs, bt=None, btw=None, costs=None, now_ts=None, info=Non
     R["param_hash_di_log"] = hashes
 
     # ------------------------------------------------------------- forward test
-    eq_pts = [(c["mulai_ts"], c["equity"]) for c in calls if c.get("equity") is not None]
+    eq_pts = [(c["mulai_ts"], c["equity"]) for c in calls
+              if c.get("equity") is not None and c.get("status") not in ("data_gagal_dicoba_lagi", "error")]
     fwd = M.curve_stats(modal, eq_pts)
     ftr, fopen = M.trades_from_orders(orders)
     fwd["trade"] = M.trade_stats(ftr)
@@ -89,6 +90,13 @@ def build_report(cfg, logs, bt=None, btw=None, costs=None, now_ts=None, info=Non
         fwd["benchmark_btc"] = {**M.curve_stats(modal, pts), "harga_beli_avg": f0["avg"], "qty": f0["qty"],
                                 "kurva": _down([[t, v] for t, v in pts]),
                                 "metode": "beli Rp modal/(1+fee) di ask snapshot pertama (habiskan level), nilai = qty x best bid tiap snapshot"}
+    # sinyal terakhir per pasangan + berapa kali tiap syarat masuk terpenuhi (menjelaskan kenapa ada/tidak ada trade)
+    last_sig = {}
+    for s_ in sorted(signals, key=lambda x: x["candle_t"]):
+        last_sig[s_["pair"]] = s_
+    kunci = ("rezim", "breakout", "di_atas_sma", "slope_ok", "vol_menyempit", "entry_raw", "entry_final")
+    fwd["sinyal_terakhir"] = [last_sig[k] for k in p["pairs"] if k in last_sig]
+    fwd["kondisi_terpenuhi"] = {"n_baris": len(signals), **{k: sum(1 for x in signals if x.get(k)) for k in kunci}}
     R["forward"] = fwd
     R["forward"]["jendela"] = {"mulai": fa, "selesai": fb}
 
@@ -105,10 +113,15 @@ def build_report(cfg, logs, bt=None, btw=None, costs=None, now_ts=None, info=Non
     offs = [c["candle_diproses"] % tf for c in logs.get("calls", []) if c.get("candle_diproses") is not None]
     off = max(set(offs), key=offs.count) if offs else 0
     exp = [t for t in range(int(((fa or 0) - off) // tf) * tf + off - tf, int(fend) + 1, tf) if fa and candle_in(t) and t + tf <= fend]
+    per_candle = {}
+    for s_ in signals:
+        per_candle.setdefault(s_["candle_t"], []).append(s_)
+    candle_tanpa_data = sorted(t for t, rows_ in per_candle.items()
+                               if rows_ and all(r.get("alasan_tidak_valid") == "data_candle_gagal" for r in rows_))
     on_time = {}
     for c in calls:
         cd = c.get("candle_diproses")
-        if cd is not None and c["mulai_ts"] < cd + 2 * tf:
+        if cd is not None and cd not in candle_tanpa_data and c["mulai_ts"] < cd + 2 * tf:
             on_time[cd] = c["mulai_ts"]
     exp = [t for t in exp if t + 2 * tf <= now_ts or t in on_time]   # tenggat (candle berikutnya tutup) sudah lewat
     proc = [t for t in exp if t in on_time]
@@ -127,6 +140,9 @@ def build_report(cfg, logs, bt=None, btw=None, costs=None, now_ts=None, info=Non
     for c in calls:
         by_status[c.get("status")] = by_status.get(c.get("status"), 0) + 1
         by_src[c.get("sumber")] = by_src.get(c.get("sumber"), 0) + 1
+    call_403 = sorted({e.get("call_id") for e in errors if e.get("jenis") == "http_403"})
+    call_ditolak = [c for c in calls if (c.get("n_error_api") or 0) > 0 and c.get("id") in set(call_403)
+                    and (c.get("status") == "data_gagal_dicoba_lagi" or c.get("candle_diproses") in candle_tanpa_data)]
     err_by = {}
     for e in errors:
         err_by[e.get("jenis")] = err_by.get(e.get("jenis"), 0) + 1
@@ -148,6 +164,11 @@ def build_report(cfg, logs, bt=None, btw=None, costs=None, now_ts=None, info=Non
         "durasi_panggilan_detik": {"median": stt.median([c["durasi_s"] for c in calls if c.get("durasi_s") is not None]) if calls else None,
                                    "maks": max([c.get("durasi_s") or 0 for c in calls]) if calls else None},
         "error_api_total": len(errors), "error_per_jenis": err_by,
+        "panggilan_dengan_403": len(call_403),
+        "panggilan_tanpa_data": len(call_ditolak),
+        "candle_tanpa_data": candle_tanpa_data,
+        "catatan_uptime": "Candle yang tercatat diproses tetapi seluruh datanya gagal diambil (Indodax menolak, HTTP 403) "
+                          "tidak dihitung tepat waktu. Sejak perbaikan 9 Nov 2026, candle seperti itu dicoba lagi di panggilan berikutnya.",
         "panggilan_dengan_error": sum(1 for c in calls if (c.get("n_error_api") or 0) > 0 or c.get("status") == "error"),
         "event_per_jenis": ev_by,
         "kill_switch": [e for e in events if str(e.get("jenis", "")).startswith("kill_switch")],
@@ -195,6 +216,11 @@ def build_report(cfg, logs, bt=None, btw=None, costs=None, now_ts=None, info=Non
         rows, same, comp = [], 0, 0
         for k in keys:
             a, b_ = fsig.get(k), bsig.get(k)
+            if a and a.get("alasan_tidak_valid") == "data_candle_gagal":
+                rows.append({"pair": k[0], "candle_t": k[1], "cocok": None,
+                             "catatan": "bot tidak mendapat data (Indodax menolak, HTTP 403)",
+                             "bt_entry": (b_ or {}).get("entry_final"), "bt_exit": (b_ or {}).get("exit")})
+                continue
             if a and b_:
                 comp += 1
                 ok = (a["entry_final"] == b_["entry_final"]) and ((a.get("exit") or None) == (b_.get("exit") or None))
@@ -213,6 +239,7 @@ def build_report(cfg, logs, bt=None, btw=None, costs=None, now_ts=None, info=Non
         g["sinyal"] = {"dibandingkan": comp, "identik": same, "persen_identik": same / comp if comp else None,
                        "hanya_backtest": sum(1 for k in keys if k in bsig and k not in fsig),
                        "hanya_bot": sum(1 for k in keys if k in fsig and k not in bsig),
+                       "bot_tanpa_data": sum(1 for k in keys if k in fsig and fsig[k].get("alasan_tidak_valid") == "data_candle_gagal"),
                        "baris_penting": rows[:400]}
         # perbandingan fill per order (pair, candle, sisi)
         bo = {(o["pair"], o["candle_t"], o["sisi"]): o for o in btw["orders"]}

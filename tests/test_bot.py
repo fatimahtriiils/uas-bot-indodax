@@ -207,6 +207,42 @@ class TestBotDanParitas(unittest.TestCase):
         self.assertTrue(any(e["jenis"] == "timeout_atau_jaringan" for e in errs))
         self.assertTrue(any(s["orderbook"] == "orderbook_kosong" for s in store.lrange("signals") if s["pair"] == "ethidr"))
 
+    def test_data_ditolak_403_dicoba_lagi(self):
+        """Semua request ditolak (HTTP 403) -> candle TIDAK ditandai selesai; panggilan berikutnya memprosesnya."""
+        import urllib.error
+        tmp = tempfile.mkdtemp()
+        store = FileStore(os.path.join(tmp, "s.json"))
+        fa = self.candles["btcidr"][700]["t"]
+        api = FakeAPI(self.candles, fa + 7 * 60)
+
+        def tolak(url):
+            raise urllib.error.HTTPError(url, 403, "Forbidden", None, None)
+        c403 = Indodax(timeout=1, retries=3, min_interval=0, sleeper=lambda s: None, opener=tolak)
+        r1 = run_tick(store, c403, self.cfg, clock=lambda: api.now)
+        self.assertEqual(r1["status"], "data_gagal_dicoba_lagi")
+        self.assertIsNone(r1["candle_diproses"])
+        self.assertIn("data_gagal_dicoba_lagi", [e["jenis"] for e in store.lrange("events")])
+        self.assertTrue(all(e["jenis"] == "http_403" for e in store.lrange("errors")))
+        api.now += 30 * 60
+        r2 = run_tick(store, client(api), self.cfg, clock=lambda: api.now)
+        self.assertEqual(r2["status"], "ok")
+        self.assertIsNotNone(r2["candle_diproses"])
+
+    def test_daily_loss_limit_memblokir_posisi_baru(self):
+        """Equity di bawah batas harian -> event daily_loss_limit tercatat dan tidak ada pembelian hari itu."""
+        import json as _j
+        from core.bot import wib_date
+        tmp = tempfile.mkdtemp()
+        store = FileStore(os.path.join(tmp, "s.json"))
+        fa = self.candles["btcidr"][700]["t"]
+        api = FakeAPI(self.candles, fa + 7 * 60)
+        st = {"kas": 100000000.0, "posisi": {}, "last_candle_t": None, "hari": wib_date(api.now),
+              "equity_awal_hari": 200000000.0, "dll_hari": None, "kill_terakhir": False, "seq": 0, "last_bid": {}}
+        store.set("state", _j.dumps(st))
+        run_tick(store, client(api), self.cfg, clock=lambda: api.now)
+        self.assertIn("daily_loss_limit", [e["jenis"] for e in store.lrange("events")])
+        self.assertEqual([o for o in store.lrange("orders") if o["sisi"] == "buy"], [])
+
     def test_jendela_indikator_tidak_tergantung_panjang_data(self):
         b = self.candles["ethidr"]
         i = 800

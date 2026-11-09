@@ -132,6 +132,18 @@ def run_tick(store, client, cfg, sumber="cron", clock=time.time):
                 nilai += ps["qty"] * bid
             return state["kas"] + nilai, nilai, basi
 
+        # ---------------------------------------------------------- data gagal total -> JANGAN tandai candle selesai
+        # (perbaikan bug 9 Nov 2026: sebelumnya candle tetap ditandai diproses walau semua request ditolak
+        #  Indodax/HTTP 403, sehingga panggilan berikutnya tidak mencoba lagi). Tidak mengubah aturan trading.
+        gagal = [x for x in semua if not bars.get(x)]
+        if call.get("server_time_fallback") or gagal:
+            jenis = sorted({e.get("jenis") for e in client.errors if e.get("jenis")})
+            logs["events"].append({"waktu_utc": iso(clock()), "call_id": call_id, "jenis": "data_gagal_dicoba_lagi",
+                                   "candle_t": target_t, "keterangan": f"candle gagal diambil: {gagal or 'server_time'}; error: {jenis}"})
+            call["status"] = "data_gagal_dicoba_lagi"
+            eq0 = state["kas"] + sum(ps["qty"] * state["last_bid"].get(pr, ps["entry_avg"]) for pr, ps in pos.items())
+            return _finish(store, state, logs, call, client, clock, eq0)
+
         equity, nilai_pos, basi = mark()
         call["equity_awal"] = round(equity, 2)
         if basi:
