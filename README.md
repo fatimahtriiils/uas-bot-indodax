@@ -32,6 +32,10 @@ Waktu sebenarnya dicatat apa adanya; tidak ada riwayat commit yang ditulis ulang
   tetap menandai candle itu sebagai sudah diproses tanpa data, sehingga panggilan berikutnya tidak mencoba lagi. Sekarang
   candle tidak ditandai selesai bila data gagal diambil (status `data_gagal_dicoba_lagi`), dan dashboard tidak lagi
   menghitung candle tanpa data sebagai tepat waktu (`core/bot.py`, `core/report.py`). Aturan trading tidak berubah.
+- 9 Nov 2026, penyebab HTTP 403 ditemukan: sejak sekitar 7 Nov Indodax menolak User-Agent lama (`uas-dryrun-bot/1.0`) dan
+  `Python-urllib`, dari Vercel maupun dari laptop (uji curl: UA lama 403, curl biasa 200). User-Agent diganti menjadi
+  `UAS-AlgoTrading-25110200019/1.0 (tugas kuliah)` (`core/indodax.py`), tidak menyamar sebagai browser. Region fungsi juga
+  dipindah ke `sin1` (`vercel.json`) sebelum penyebab ini diketahui. Semua perubahan dicatat di log `events`.
 
 ## Struktur
 
