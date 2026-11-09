@@ -7,7 +7,7 @@ import urllib.parse
 import urllib.request
 
 BASE = "https://indodax.com"
-UA = "uas-dryrun-bot/1.0 (tugas kuliah; tanpa API key)"
+UA = "UAS-AlgoTrading-25110200019/1.0 (tugas kuliah)"
 
 
 class Indodax:
