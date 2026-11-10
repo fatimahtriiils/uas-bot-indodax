@@ -7,26 +7,26 @@
 <meta name="description" content="UAS Algoritma Trading: dashboard audit bot dry run Indodax. Semua angka dihitung dari log mentah oleh core/report.py.">
 <style>
 :root{
-  --bg:#f3f4f8;--surface:#ffffff;--sunk:#eceef5;--line:#dfe2ec;--line2:#c9cddc;
-  --ink:#1b1f3b;--ink2:#4a5070;--ink3:#8288a3;
-  --rose:#b0175a;--rose-soft:#f7e3ec;--slate:#5f7396;
-  --up:#0b7f5a;--up-soft:#dcf2e9;--down:#b8323f;--down-soft:#f8e1e4;--warn:#9a6200;--warn-soft:#fbefd6;
-  --pending:#d9dce7;
-  --r-lg:14px;--r-sm:8px;
+  --bg:#fbf6f9;--surface:#ffffff;--sunk:#f7eef3;--line:#f1dfe8;--line2:#e4c8d6;
+  --ink:#2b1e33;--ink2:#5d4a66;--ink3:#94829d;
+  --rose:#d6407f;--rose-soft:#fde4ef;--slate:#3fa886;--mint:#bfeedd;--mint-soft:#e9f8f1;
+  --up:#1d8a62;--up-soft:#dcf5ea;--down:#c03546;--down-soft:#fde2e6;--warn:#a46300;--warn-soft:#fdf0d9;
+  --pending:#efe3ea;
+  --r-lg:16px;--r-sm:10px;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#12142a;--surface:#1a1d38;--sunk:#22264a;--line:#2d3260;--line2:#3c427a;
-  --ink:#eceef8;--ink2:#b5b9d6;--ink3:#7f85aa;
-  --rose:#f06aa0;--rose-soft:#3a1e3b;--slate:#93a6c9;
-  --up:#4fd3a0;--up-soft:#173a35;--down:#ff8794;--down-soft:#3d2032;--warn:#f3c066;--warn-soft:#3a3122;
-  --pending:#30355f;color-scheme:dark}}
+  --bg:#1c1520;--surface:#261c2b;--sunk:#302337;--line:#3e2e46;--line2:#53405e;
+  --ink:#f8eef4;--ink2:#d0bfd9;--ink3:#9c89a8;
+  --rose:#ff8fc0;--rose-soft:#4a2440;--slate:#7fe0bb;--mint:#2f5c4c;--mint-soft:#203a31;
+  --up:#6fe0b0;--up-soft:#1f3b33;--down:#ff8a96;--down-soft:#4a2230;--warn:#f5c46a;--warn-soft:#3e3221;
+  --pending:#3a2c40;color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#12142a;--surface:#1a1d38;--sunk:#22264a;--line:#2d3260;--line2:#3c427a;
-  --ink:#eceef8;--ink2:#b5b9d6;--ink3:#7f85aa;
-  --rose:#f06aa0;--rose-soft:#3a1e3b;--slate:#93a6c9;
-  --up:#4fd3a0;--up-soft:#173a35;--down:#ff8794;--down-soft:#3d2032;--warn:#f3c066;--warn-soft:#3a3122;
-  --pending:#30355f;color-scheme:dark}
+  --bg:#1c1520;--surface:#261c2b;--sunk:#302337;--line:#3e2e46;--line2:#53405e;
+  --ink:#f8eef4;--ink2:#d0bfd9;--ink3:#9c89a8;
+  --rose:#ff8fc0;--rose-soft:#4a2440;--slate:#7fe0bb;--mint:#2f5c4c;--mint-soft:#203a31;
+  --up:#6fe0b0;--up-soft:#1f3b33;--down:#ff8a96;--down-soft:#4a2230;--warn:#f5c46a;--warn-soft:#3e3221;
+  --pending:#3a2c40;color-scheme:dark}
 *{box-sizing:border-box}
 html{scroll-padding-top:110px}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
@@ -106,6 +106,16 @@ code,.mono{font-family:ui-monospace,"Cascadia Mono",Consolas,Menlo,monospace;fon
 .ck span.d{display:block;color:var(--ink3);font-size:12.5px}
 dl.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:0;font-size:13.5px}
 dl.kv dt{color:var(--ink3)}dl.kv dd{margin:0;font-variant-numeric:tabular-nums}
+
+header::before{content:"";display:block;height:4px;background:linear-gradient(90deg,var(--rose),var(--slate))}
+.who b::after{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--rose);margin-left:8px;vertical-align:2px;box-shadow:12px 0 0 var(--slate)}
+nav a:hover{color:var(--rose);border-bottom-color:var(--rose)}
+.hero>.panel{background:linear-gradient(160deg,var(--mint-soft),var(--surface) 60%)}
+.ledger>div:first-child{background:linear-gradient(180deg,var(--rose-soft),transparent 75%);border-top-left-radius:var(--r-lg);border-bottom-left-radius:var(--r-lg)}
+button.theme{background:var(--mint-soft);border-color:var(--mint)}
+.rub .panel{border-top:3px solid var(--mint)}
+.chip.ok{background:var(--mint-soft)}
+th{color:var(--rose)}
 @media (max-width:900px){
   .hero,.grid2{grid-template-columns:1fr}
   .ledger{grid-template-columns:1fr 1fr}
