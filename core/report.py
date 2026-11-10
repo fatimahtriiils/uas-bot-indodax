@@ -157,6 +157,9 @@ def build_report(cfg, logs, bt=None, btw=None, costs=None, now_ts=None, info=Non
         "panggilan_per_sumber": by_src, "panggilan_per_status": by_status,
         "candle_seharusnya": len(exp), "candle_tepat_waktu": len(proc),
         "uptime": (len(proc) / len(exp)) if exp else None,
+        "candle_terganggu_indodax": len([t for t in exp if t in candle_tanpa_data]),
+        "uptime_di_luar_gangguan_indodax": (len(proc) / len([t for t in exp if t not in candle_tanpa_data]))
+                                           if [t for t in exp if t not in candle_tanpa_data] else None,
         "candle_tidak_diproses": [t for t in exp if t not in on_time],
         "tunda_proses_detik": {"median": stt.median(delays) if delays else None, "maks": max(delays) if delays else None},
         "keterlambatan_jadwal_detik": {"median": stt.median(sched_delay) if sched_delay else None,

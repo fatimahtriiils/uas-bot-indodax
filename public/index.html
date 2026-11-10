@@ -230,7 +230,7 @@ function render(R){
     <div><div class="l">Return forward test</div><div class="v ${cls(F.return_total)}">${pct(F.return_total)}</div><div class="s">equity ${rp(F.equity_akhir)}</div></div>
     <div><div class="l">Drawdown terdalam</div><div class="v ${F.max_drawdown<0?'down':''}">${pct(F.max_drawdown)}</div><div class="s">dari ${nf(F.n_titik)} titik equity</div></div>
     <div><div class="l">BTC/IDR beli dan tahan</div><div class="v ${cls(FB.return_total)}">${pct(FB.return_total)}</div><div class="s">pembanding pada periode sama</div></div>
-    <div><div class="l">Uptime</div><div class="v ${ok(up)?(up>=.95?'up':up>=.8?'warn':'down'):''}">${pct(up,1,false)}</div><div class="s">${nf(O.candle_tepat_waktu)} dari ${nf(O.candle_seharusnya)} candle tepat waktu</div></div>
+    <div><div class="l">Uptime</div><div class="v ${ok(up)?(up>=.95?'up':up>=.8?'warn':'down'):''}">${pct(up,1,false)}</div><div class="s">${nf(O.candle_tepat_waktu)} dari ${nf(O.candle_seharusnya)} candle tepat waktu${O.candle_terganggu_indodax?`; ${pct(O.uptime_di_luar_gangguan_indodax,1,false)} di luar ${nf(O.candle_terganggu_indodax)} candle gangguan Indodax`:''}</div></div>
     <div><div class="l">Backtest 3 tahun</div><div class="v ${B?cls(B.return_total):''}">${B?pct(B.return_total):'—'}</div><div class="s">${B?'CAGR '+pct(B.cagr)+', drawdown '+pct(B.max_drawdown):'belum dijalankan'}</div></div>
    </div>
    <div class="grid2" style="margin-top:16px">
@@ -299,6 +299,7 @@ function render(R){
      <dt>Durasi satu panggilan</dt><dd>median ${nf(dp.median,1)} detik, maksimum ${nf(dp.maks,1)} detik (batas 300)</dd>
      <dt>Status panggilan</dt><dd>${Object.entries(O.panggilan_per_status||{}).map(([k,v])=>esc(k)+' '+v).join(', ')||'—'}</dd>
      <dt>Sumber panggilan</dt><dd>${Object.entries(O.panggilan_per_sumber||{}).map(([k,v])=>esc(k)+' '+v).join(', ')||'—'}</dd>
+     <dt>Uptime di luar gangguan Indodax</dt><dd>${pct(O.uptime_di_luar_gangguan_indodax,1,false)} (${nf(O.candle_tepat_waktu)} dari ${nf((O.candle_seharusnya||0)-(O.candle_terganggu_indodax||0))} candle yang tidak terdampak HTTP 403)</dd>
      <dt>Panggilan ditolak Indodax (HTTP 403)</dt><dd>${nf(O.panggilan_dengan_403)} panggilan, ${nf(O.panggilan_tanpa_data)} tanpa data sama sekali</dd>
      <dt>Candle tidak diproses</dt><dd>${(O.candle_tidak_diproses||[]).length?(O.candle_tidak_diproses||[]).map(wib).join(', '):'tidak ada'}</dd></dl></div>
     <div class="panel pad"><h3 style="margin-top:0">Error dan event</h3><dl class="kv">
