@@ -116,6 +116,24 @@ button.theme{background:var(--mint-soft);border-color:var(--mint)}
 .rub .panel{border-top:3px solid var(--mint)}
 .chip.ok{background:var(--mint-soft)}
 th{color:var(--rose)}
+.kgrp{margin:0 0 18px}
+.kgrp>h3{margin:0 0 10px;font-size:14px;color:var(--ink2);font-weight:650;display:flex;align-items:center;gap:8px}
+.kgrp>h3 i{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--rose)}
+.kgrp.mint>h3 i{background:var(--slate)}
+.kcards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(178px,1fr))}
+.kc{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 18px;min-height:118px}
+.kc .l{font-size:13px;color:var(--ink2)}
+.kc .v{font-size:30px;font-weight:750;letter-spacing:-.02em;margin:6px 0 2px;font-variant-numeric:tabular-nums;line-height:1.1}
+.kc .s{font-size:12.5px;color:var(--ink3)}
+.kc .v.vrp{font-size:21px;margin-top:10px;word-break:break-all}
+.kgrp h2,#metrik h2{margin-top:6px}
+.kc.hl{border-color:var(--rose);background:linear-gradient(180deg,var(--rose-soft),var(--surface) 80%)}
+.kc.hm{border-color:var(--slate);background:linear-gradient(180deg,var(--mint-soft),var(--surface) 80%)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+footer{max-width:1200px;margin:0 auto;padding:0 20px 40px;font-size:12.5px;color:var(--ink3)}
+footer code{color:var(--ink2)}
+.upd{font-size:12px;color:var(--ink3)}
+@media (max-width:900px){.two-col{grid-template-columns:1fr}}
 @media (max-width:900px){
   .hero,.grid2{grid-template-columns:1fr}
   .ledger{grid-template-columns:1fr 1fr}
@@ -130,6 +148,7 @@ th{color:var(--rose)}
   .ledger .v{font-size:24px}
   .ticks{grid-template-rows:repeat(6,8px)}.tk{width:8px;height:8px}.daylab span{width:8px}
 }
+@media (max-width:560px){.kcards{grid-template-columns:1fr 1fr;gap:10px}.kc{padding:14px;min-height:0}.kc .v{font-size:22px}.kc .v.vrp{font-size:15px}}
 @media (prefers-reduced-motion:no-preference){.tk{transition:transform .15s}.tk:hover{transform:scale(1.4)}}
 </style>
 </head>
@@ -138,27 +157,29 @@ th{color:var(--rose)}
   <div class="bar">
     <div class="who"><b>Fatimah Tri Lestari</b><span>25110200019, UAS Algoritma Trading</span></div>
     <div class="live" id="live"><span class="dot"></span><span>Memuat status bot…</span></div>
+    <span class="upd" id="upd"></span>
     <button class="theme" id="theme" aria-label="Ganti tema terang/gelap">Tema</button>
   </div>
   <nav aria-label="Bagian dashboard">
-    <a href="#ringkasan">Ringkasan</a><a href="#sinyal">Sinyal terakhir</a><a href="#banding">Backtest vs forward</a>
+    <a href="#ringkasan">Ringkasan</a><a href="#metrik">Metrik</a><a href="#sinyal">Sinyal terakhir</a><a href="#banding">Backtest vs forward</a>
     <a href="#gap">Gap</a><a href="#ops">Operasional</a><a href="#biaya">Spread dan biaya</a><a href="#log">Trade dan log</a>
-    <a href="#siap">Rubrik</a><a href="#aturan">Aturan</a><a href="#catatan">Keterbatasan</a>
+    <a href="#aturan">Aturan</a><a href="#catatan">Keterbatasan</a>
   </nav>
 </header>
 <main>
   <div id="status"></div>
   <section id="ringkasan"></section>
+  <section id="metrik"></section>
   <section id="sinyal"></section>
   <section id="banding"></section>
   <section id="gap"></section>
   <section id="ops"></section>
   <section id="biaya"></section>
   <section id="log"></section>
-  <section id="siap"></section>
   <section id="aturan"></section>
   <section id="catatan"></section>
 </main>
+<footer id="audit"></footer>
 <script>
 // Data report: di Vercel diambil dari /api/report; di file offline sudah tertanam oleh hitung_ulang.py.
 // Halaman ini TIDAK menghitung metrik apa pun — hanya memformat angka dari report.
@@ -221,13 +242,8 @@ function render(R){
   if(last){const good=last.status!=='error';$('#live').innerHTML=`<span class="dot ${good?'ok':'bad'}"></span><span>${good?'Bot aktif':'Panggilan terakhir error'}, terakhir dipanggil ${wibS(last.mulai_utc)}</span>`}
   else $('#live').innerHTML='<span class="dot"></span><span>Bot belum dipanggil pada jendela forward test</span>';
 
-  const warn=[];
-  if(!ok(S.fee_taker_beli_persen_resmi)) warn.push('Tarif fee resmi belum diisi di config/strategy.json.');
-  if((R.param_hash_di_log||[]).length>1) warn.push('Log berisi lebih dari satu hash parameter ('+R.param_hash_di_log.join(', ')+'). Periksa apakah aturan berubah setelah freeze.');
-  if(!B) warn.push('Hasil backtest (results/backtest) belum ada.');
-  if(!G) warn.push('Bagian Gap terisi setelah backtest jendela forward dijalankan, yaitu setelah forward test selesai.');
-  $('#status').innerHTML=(warn.length?`<div class="notice"><b>Belum lengkap</b><ul>${warn.map(w=>`<li>${esc(w)}</li>`).join('')}</ul></div>`:'')+
-   `<p class="src">Angka dihitung oleh <code>core/report.py</code> dari ${esc((R.info||{}).sumber||'log')}, pada ${wibS(R.dibuat_utc)}. Hash parameter <code>${esc(R.param_hash)}</code>${(R.info||{}).kode?`, commit <code>${esc(R.info.kode)}</code>`:''}.</p>`;
+  $('#status').innerHTML='';
+  $('#audit').innerHTML=`Semua angka dihitung otomatis oleh <code>core/report.py</code> dari log bot (${esc((R.info||{}).sumber||'log')}), terakhir ${wibS(R.dibuat_utc)}. Hash parameter <code>${esc(R.param_hash)}</code>${(R.info||{}).kode?`, commit <code>${esc(R.info.kode)}</code>`:''}. Repositori: github.com/fatimahtriiils/uas-bot-indodax.`;
 
   const FB=F.benchmark_btc||{},up=O.uptime;
   $('#ringkasan').innerHTML=`<div class="hero">
@@ -235,18 +251,58 @@ function render(R){
       <p class="lede">Bot long-only pada candle ${S.timeframe_menit/60} jam, memperdagangkan ${(S.pairs||[]).length} pasangan IDR di order book asli Indodax dengan modal virtual ${rp(S.modal_awal)}.</p>
       <dl class="facts"><dt>Pasangan</dt><dd>${esc((S.pairs||[]).map(pair).join(', '))}</dd>
       <dt>Forward test</dt><dd>${wib((F.jendela||{}).mulai)} sampai ${wib((F.jendela||{}).selesai)}</dd></dl></div>
-    <div class="panel pad">${timeline(R)}</div></div>
-   <div class="panel ledger">
-    <div><div class="l">Return forward test</div><div class="v ${cls(F.return_total)}">${pct(F.return_total)}</div><div class="s">equity ${rp(F.equity_akhir)}</div></div>
-    <div><div class="l">Drawdown terdalam</div><div class="v ${F.max_drawdown<0?'down':''}">${pct(F.max_drawdown)}</div><div class="s">dari ${nf(F.n_titik)} titik equity</div></div>
-    <div><div class="l">BTC/IDR beli dan tahan</div><div class="v ${cls(FB.return_total)}">${pct(FB.return_total)}</div><div class="s">pembanding pada periode sama</div></div>
-    <div><div class="l">Uptime</div><div class="v ${ok(up)?(up>=.95?'up':up>=.8?'warn':'down'):''}">${pct(up,1,false)}</div><div class="s">${nf(O.candle_tepat_waktu)} dari ${nf(O.candle_seharusnya)} candle tepat waktu${O.candle_terganggu_indodax?`; ${pct(O.uptime_di_luar_gangguan_indodax,1,false)} di luar ${nf(O.candle_terganggu_indodax)} candle gangguan Indodax`:''}</div></div>
-    <div><div class="l">Backtest 3 tahun</div><div class="v ${B?cls(B.return_total):''}">${B?pct(B.return_total):'—'}</div><div class="s">${B?'CAGR '+pct(B.cagr)+', drawdown '+pct(B.max_drawdown):'belum dijalankan'}</div></div>
-   </div>
-   <div class="grid2" style="margin-top:16px">
+    <div class="panel pad">${timeline(R)}</div></div>`;
+  const chartsH=`<h2>Kurva equity</h2><p class="sub">Garis putus-putus adalah modal awal.</p><div class="grid2">
     <div class="panel pad"><h3 style="margin-top:0">Equity forward test</h3>${chart([{name:'Bot (dinilai di best bid)',color:'var(--rose)',pts:F.kurva||[],w:2.4,fill:1,base:S.modal_awal},{name:'BTC/IDR beli dan tahan',color:'var(--slate)',pts:FB.kurva||[],w:1.6}],{fmt:v=>pct(v/S.modal_awal-1,1)})}</div>
     <div class="panel pad"><h3 style="margin-top:0">Equity backtest 3 tahun</h3>${B?chart([{name:'Strategi',color:'var(--rose)',pts:B.kurva||[],w:2.2,fill:1,base:S.modal_awal},{name:'BTC/IDR beli dan tahan',color:'var(--slate)',pts:(B.benchmark_btc||{}).kurva||[],w:1.6}],{fmt:v=>pct(v/S.modal_awal-1,0)}):'<div class="empty">Belum ada hasil backtest.</div>'}</div>
    </div>`;
+
+  const BBk=B?(B.benchmark_btc||{}):{},FTk=F.trade||{},BTk=B?B.trade:{};
+  const kc=(l,v,sub,c='',x='')=>`<div class="kc ${x}"><div class="l">${l}</div><div class="v ${c} ${/Rp/.test(v)?'vrp':''}">${v}</div><div class="s">${sub||''}</div></div>`;
+  const pfv=t=>t&&ok(t.profit_factor)?nf(t.profit_factor,2):'—';
+  const pfs=t=>t&&!ok(t.profit_factor)?esc(t.profit_factor_catatan||''):'';
+  const pbv=t=>t&&ok(t.porsi_biaya)?pct(t.porsi_biaya,1,false):'—';
+  const pbs=t=>t&&!ok(t.porsi_biaya)?(t.jumlah_trade?'laba kotor ≤ 0':'tidak ada trade'):'(fee + spread + slippage) / laba kotor';
+  const ksM=O.kill_switch||[];
+  $('#metrik').innerHTML=`<h2>Metrik wajib UAS</h2><p class="sub">Diperbarui otomatis dari log bot. CAGR tidak ditampilkan untuk forward test karena 10 hari tidak cukup untuk disetahunkan.</p>
+   <div class="kgrp"><h3><i></i>Modal dan forward test</h3><div class="kcards">
+    ${kc('Modal awal virtual',rp(S.modal_awal),'dry run, tanpa uang sungguhan','', 'hl')}
+    ${kc('Equity sekarang',rp(F.equity_akhir),'kas + posisi dinilai di best bid')}
+    ${kc('Return total forward',pct(F.return_total),'sejak '+wib((F.jendela||{}).mulai),cls(F.return_total))}
+    ${kc('Max drawdown forward',pct(F.max_drawdown),'dari '+nf(F.n_titik)+' titik equity',F.max_drawdown<0?'down':'')}
+    ${kc('BTC/IDR beli dan tahan (forward)',pct(FB.return_total),'drawdown '+pct(FB.max_drawdown),cls(FB.return_total))}
+   </div></div>
+   <div class="kgrp mint"><h3><i></i>Backtest 3 tahun</h3><div class="kcards">
+    ${kc('CAGR',B?pct(B.cagr):'—',B?'pertumbuhan tahunan majemuk':'belum dijalankan',B?cls(B.cagr):'','hm')}
+    ${kc('Return total',B?pct(B.return_total):'—',B?wibS((B.meta||{}).mulai_utc).slice(0,10)+' sampai '+wibS((B.meta||{}).selesai_utc).slice(0,10):'',B?cls(B.return_total):'')}
+    ${kc('Max drawdown',B?pct(B.max_drawdown):'—','penurunan terdalam dari puncak',B?'down':'')}
+    ${kc('BTC/IDR beli dan tahan',B?pct(BBk.return_total):'—',B?'CAGR '+pct(BBk.cagr)+', drawdown '+pct(BBk.max_drawdown):'',B?cls(BBk.return_total):'')}
+   </div></div>
+   <div class="two-col">
+    <div class="kgrp"><h3><i></i>Statistik trade forward test</h3><div class="kcards">
+     ${kc('Jumlah trade',nf(FTk.jumlah_trade),nf((F.posisi_terbuka||[]).length)+' posisi terbuka')}
+     ${kc('Win rate',pct(FTk.win_rate,1,false),FTk.jumlah_trade?nf(FTk.jumlah_menang)+' menang, '+nf(FTk.jumlah_kalah)+' kalah':'belum ada trade')}
+     ${kc('Profit factor',pfv(FTk),pfs(FTk))}
+     ${kc('Rata-rata untung',rp(FTk.rata_untung_idr),ok(FTk.rata_untung_pct)?pp(FTk.rata_untung_pct)+' per trade':'per trade menang','up')}
+     ${kc('Rata-rata rugi',rp(FTk.rata_rugi_idr),ok(FTk.rata_rugi_pct)?pp(FTk.rata_rugi_pct)+' per trade':'per trade kalah','down')}
+     ${kc('Porsi biaya',pbv(FTk),pbs(FTk))}
+    </div></div>
+    <div class="kgrp mint"><h3><i></i>Statistik trade backtest 3 tahun</h3><div class="kcards">
+     ${kc('Jumlah trade',B?nf(BTk.jumlah_trade):'—','trade tertutup')}
+     ${kc('Win rate',B?pct(BTk.win_rate,1,false):'—',B?nf(BTk.jumlah_menang)+' menang, '+nf(BTk.jumlah_kalah)+' kalah':'')}
+     ${kc('Profit factor',B?pfv(BTk):'—',B?pfs(BTk):'')}
+     ${kc('Rata-rata untung',B?rp(BTk.rata_untung_idr):'—',B&&ok(BTk.rata_untung_pct)?pp(BTk.rata_untung_pct)+' per trade':'','up')}
+     ${kc('Rata-rata rugi',B?rp(BTk.rata_rugi_idr):'—',B&&ok(BTk.rata_rugi_pct)?pp(BTk.rata_rugi_pct)+' per trade':'','down')}
+     ${kc('Porsi biaya',B?pbv(BTk):'—',B?'biaya '+rp(BTk.biaya_total_idr)+' / laba kotor '+rp(BTk.laba_kotor_idr):'')}
+    </div></div>
+   </div>
+   <div class="kgrp"><h3><i></i>Operasional</h3><div class="kcards">
+    ${kc('Uptime',pct(O.uptime,1,false),nf(O.candle_tepat_waktu)+' dari '+nf(O.candle_seharusnya)+' candle tepat waktu',ok(O.uptime)?(O.uptime>=.95?'up':O.uptime>=.8?'warn':'down'):'')}
+    ${kc('Uptime di luar gangguan Indodax',pct(O.uptime_di_luar_gangguan_indodax,1,false),nf(O.candle_terganggu_indodax||0)+' candle ditolak Indodax (HTTP 403)',ok(O.uptime_di_luar_gangguan_indodax)&&O.uptime_di_luar_gangguan_indodax>=.95?'up':'','hm')}
+    ${kc('Panggilan terjadwal / terlaksana',nf(O.panggilan_terjadwal)+' / '+nf(O.panggilan_terjadwal_terlaksana),nf(O.panggilan_terlaksana)+' panggilan dari semua penjadwal')}
+    ${kc('Error API',nf(O.error_api_total),nf(O.panggilan_dengan_error)+' panggilan terdampak',O.error_api_total?'warn':'')}
+    ${kc('Pemakaian kill switch',nf(ksM.length)+' kali',nf(O.panggilan_saat_kill_switch)+' panggilan saat aktif')}
+   </div></div>`+chartsH;
 
   const ST=F.sinyal_terakhir||[],KT=F.kondisi_terpenuhi||{};
   const nTrade=(FT.jumlah_trade||0)+((F.posisi_terbuka||[]).length);
@@ -331,15 +387,16 @@ function render(R){
   $('#log').innerHTML=`<h2>Trade dan log forward test</h2>
    <h3>Trade tertutup</h3>
    ${tbl(['Pasangan','Masuk','Keluar','Qty','Harga masuk','Harga keluar','Laba bersih','Return','Fee','Spread','Slippage','Alasan keluar'],tr.map(t=>[pair(t.pair),wibS(t.masuk_utc),wibS(t.keluar_utc),nf(t.qty,6),nf(t.harga_masuk,2),nf(t.harga_keluar,2),`<span class="${cls(t.laba_bersih_idr)}">${rp(t.laba_bersih_idr)}</span>`,`<span class="${cls(t.return_pct)}">${pp(t.return_pct)}</span>`,rp(t.fee_idr),rp(t.spread_idr),rp(t.slippage_idr),esc(t.alasan_keluar)]),[3,4,5,6,7,8,9,10],'Belum ada trade tertutup.')}
+   <h3>Order simulasi</h3>
+   ${tbl(['Waktu','Pasangan','Sisi','Qty','Best bid','Best ask','Fill rata-rata','Fee','Selisih vs harga sinyal','Alasan'],(F.orders||[]).slice().reverse().map(o=>[wibS(o.waktu_utc),pair(o.pair),o.sisi==='buy'?chip('beli','ok'):chip('jual','bad'),nf(o.qty,8),nf(o.best_bid,2),nf(o.best_ask,2),nf(o.harga_fill_avg,2),rp(o.fee_idr),pp(o.selisih_vs_sinyal_pct,3),esc(o.alasan)]),[3,4,5,6,7,8],'Belum ada order simulasi. Bot belum mendapat sinyal masuk selama forward test.')}
    <h3>Posisi terbuka</h3>
    ${tbl(['Pasangan','Masuk','Qty','Harga masuk','Biaya masuk'],op.map(o=>[pair(o.pair),wibS(o.masuk_utc),nf(o.qty,6),nf(o.harga_masuk,2),rp(o.biaya_masuk_idr)]),[2,3,4],'Tidak ada posisi terbuka.')}
    <h3>Equity harian (panggilan pertama setelah 00.00 WIB)</h3>
    ${tbl(['Tanggal','Diambil','Equity','Kas','Nilai posisi','Posisi'],(F.equity_harian||[]).map(e=>[e.tanggal_wib,wibS(e.waktu_utc),rp(e.equity),rp(e.kas),rp(e.nilai_posisi),nf(e.n_posisi)]),[2,3,4,5])}
    <h3>Panggilan terakhir</h3>
    ${tbl(['Mulai','Sumber','Status','Candle diproses','Equity','Posisi','Request','Error','Durasi'],calls.slice().reverse().map(c=>[wibS(c.mulai_utc),esc(c.sumber),c.status==='ok'?chip('candle baru','ok'):c.status==='error'?chip('error','bad'):c.status==='data_gagal_dicoba_lagi'?chip('data ditolak, dicoba lagi','bad'):chip(c.status==='candle_sudah_diproses'?'sudah diproses':c.status),c.candle_diproses_utc?wibS(c.candle_diproses_utc):'—',rp(c.equity),nf(c.n_posisi),nf(c.n_request),nf(c.n_error_api),nf(c.durasi_s,1)+' s']),[4,5,6,7,8])}
-   <p class="note">Log mentah lengkap ada di <code>logs/*.jsonl</code>: calls ${nf(nl.calls)}, signals ${nf(nl.signals)}, orders ${nf(nl.orders)}, equity ${nf(nl.equity)}, errors ${nf(nl.errors)}, events ${nf(nl.events)}, snapshots ${nf(nl.snapshots)} baris.</p>`;
+   <p class="note">Jumlah baris log mentah: calls ${nf(nl.calls)}, signals ${nf(nl.signals)}, orders ${nf(nl.orders)}, equity ${nf(nl.equity)}, errors ${nf(nl.errors)}, events ${nf(nl.events)}, snapshots ${nf(nl.snapshots)} baris.</p>`;
 
-  renderSiap(R);
 
   const P=[['Timeframe',S.timeframe_menit+' menit, hanya candle yang sudah tertutup'],['Universe',(S.pairs||[]).map(pair).join(', ')+', dipilih dari likuiditas di awal backtest'],['Filter rezim',pair(S.pair_rezim)+' close di atas SMA'+S.sma_tren],
     ['Masuk','Close di atas high tertinggi '+S.breakout_n+' candle sebelumnya, close di atas SMA'+S.sma_tren+', SMA'+S.sma_tren+' naik lebih dari '+pct(S.slope_min,1,false)+' dalam '+S.slope_lookback+' candle, dan ATR'+S.atr_len+'/close di bawah '+S.atr_rasio_max+' kali rata-rata '+S.atr_rasio_len+' candle'],
@@ -350,7 +407,7 @@ function render(R){
   $('#aturan').innerHTML=`<h2>Aturan yang dibekukan</h2><p class="sub">Dibaca langsung dari <code>config/strategy.json</code>, file yang sama untuk bot dan backtest. Strategi berasal dari Struktur Breakout dan Keluar Waktu 30 Hari pada UTS (saham Kompas100 harian).</p>
    ${tbl(['Komponen','Aturan'],P.map(r=>[`<b>${r[0]}</b>`,`<span style="white-space:normal">${esc(r[1])}</span>`]))}
    <h3>Rumus metrik</h3>${tbl(['Metrik','Rumus'],Object.entries(R.rumus||{}).map(([k,v])=>[esc(k.replace(/_/g,' ')),`<span class="mono" style="white-space:normal">${esc(v)}</span>`]))}
-   <p class="note">Hitung ulang: <code>python tools/storage_admin.py export</code>, lalu <code>python hitung_ulang.py --banding report_vercel.json</code>. Skrip mencetak setiap angka dan membandingkannya dengan JSON dari <code>/api/report</code>.</p>`;
+`;
 }
 
 function renderSiap(R){
@@ -387,8 +444,14 @@ function renderSiap(R){
 const t=$('#theme');t.onclick=()=>{const r=document.documentElement,cur=r.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');r.dataset.theme=cur==='dark'?'light':'dark';try{localStorage.setItem('tema',r.dataset.theme)}catch(e){}};
 try{const s=localStorage.getItem('tema');if(s)document.documentElement.dataset.theme=s}catch(e){}
 
-if(window.__REPORT__) render(window.__REPORT__);
-else fetch('/api/report').then(r=>r.json()).then(R=>{if(R.error)throw new Error(R.error);render(R)}).catch(e=>{$('#status').innerHTML=`<div class="notice bad"><b>Dashboard gagal memuat data.</b> /api/report mengembalikan: ${esc(e.message)}. Periksa log fungsi di Vercel.</div>`;$('#live').innerHTML='<span class="dot bad"></span><span>Data tidak dapat dimuat</span>'});
+let lastOk=null;
+function load(){
+  fetch('/api/report',{cache:'no-store'}).then(r=>r.json()).then(R=>{if(R.error)throw new Error(R.error);const y=window.scrollY;render(R);window.scrollTo(0,y);lastOk=new Date();stamp()})
+  .catch(e=>{if(!lastOk){$('#status').innerHTML=`<div class="notice bad"><b>Dashboard gagal memuat data.</b> ${esc(e.message)}</div>`;$('#live').innerHTML='<span class="dot bad"></span><span>Data tidak dapat dimuat</span>'}});
+}
+function stamp(){const u=$('#upd');if(u&&lastOk)u.textContent='Diperbarui otomatis tiap menit, terakhir '+lastOk.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
+if(window.__REPORT__){render(window.__REPORT__);const u=document.getElementById('upd');if(u)u.textContent='Versi offline: data dibekukan saat file dibuat'}
+else{load();setInterval(()=>{if(!document.hidden)load()},60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()})}
 })();
 </script>
 </body>

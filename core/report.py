@@ -78,6 +78,7 @@ def build_report(cfg, logs, bt=None, btw=None, costs=None, now_ts=None, info=Non
     ftr, fopen = M.trades_from_orders(orders)
     fwd["trade"] = M.trade_stats(ftr)
     fwd["daftar_trade"] = ftr
+    fwd["orders"] = orders[-300:]
     fwd["posisi_terbuka"] = fopen
     fwd["kurva"] = _down([[t, v] for t, v in eq_pts])
     fwd["equity_harian"] = [e for e in logs.get("equity", []) if inwin(parse_iso(e.get("waktu_utc")) or 0)]
