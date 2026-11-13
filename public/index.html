@@ -264,7 +264,7 @@ function render(R){
   const pbv=t=>t&&ok(t.porsi_biaya)?pct(t.porsi_biaya,1,false):'—';
   const pbs=t=>t&&!ok(t.porsi_biaya)?(t.jumlah_trade?'laba kotor ≤ 0':'tidak ada trade'):'(fee + spread + slippage) / laba kotor';
   const ksM=O.kill_switch||[];
-  $('#metrik').innerHTML=`<h2>Metrik wajib UAS</h2><p class="sub">Diperbarui otomatis dari log bot. CAGR tidak ditampilkan untuk forward test karena 10 hari tidak cukup untuk disetahunkan.</p>
+  $('#metrik').innerHTML=`
    <div class="kgrp"><h3><i></i>Modal dan forward test</h3><div class="kcards">
     ${kc('Modal awal virtual',rp(S.modal_awal),'dry run, tanpa uang sungguhan','', 'hl')}
     ${kc('Equity sekarang',rp(F.equity_akhir),'kas + posisi dinilai di best bid')}
@@ -301,7 +301,7 @@ function render(R){
     ${kc('Uptime di luar gangguan Indodax',pct(O.uptime_di_luar_gangguan_indodax,1,false),nf(O.candle_terganggu_indodax||0)+' candle ditolak Indodax (HTTP 403)',ok(O.uptime_di_luar_gangguan_indodax)&&O.uptime_di_luar_gangguan_indodax>=.95?'up':'','hm')}
     ${kc('Panggilan terjadwal / terlaksana',nf(O.panggilan_terjadwal)+' / '+nf(O.panggilan_terjadwal_terlaksana),nf(O.panggilan_terlaksana)+' panggilan dari semua penjadwal')}
     ${kc('Error API',nf(O.error_api_total),nf(O.panggilan_dengan_error)+' panggilan terdampak',O.error_api_total?'warn':'')}
-    ${kc('Pemakaian kill switch',nf(ksM.length)+' kali',nf(O.panggilan_saat_kill_switch)+' panggilan saat aktif')}
+    ${kc('Pemakaian kill switch',nf(O.kill_switch_pemakaian??ksM.length)+' kali',nf(O.panggilan_saat_kill_switch)+' panggilan saat aktif, '+nf(ksM.length)+' event tercatat')}
    </div></div>`+chartsH;
 
   const ST=F.sinyal_terakhir||[],KT=F.kondisi_terpenuhi||{};

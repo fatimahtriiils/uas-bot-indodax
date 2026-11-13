@@ -176,6 +176,9 @@ def build_report(cfg, logs, bt=None, btw=None, costs=None, now_ts=None, info=Non
         "panggilan_dengan_error": sum(1 for c in calls if (c.get("n_error_api") or 0) > 0 or c.get("status") == "error"),
         "event_per_jenis": ev_by,
         "kill_switch": [e for e in events if str(e.get("jenis", "")).startswith("kill_switch")],
+        # satu pemakaian = satu kali dinyalakan (ON); event lain (OFF, deteksi oleh tick) adalah catatan pendukung
+        "kill_switch_pemakaian": max(sum(1 for e in events if e.get("jenis") == "kill_switch_diubah" and str(e.get("nilai")) == "1"),
+                                     sum(1 for e in events if e.get("jenis") == "kill_switch_ON")),
         "panggilan_saat_kill_switch": sum(1 for c in calls if c.get("kill_switch")),
         "daily_loss_limit": [e for e in events if e.get("jenis") == "daily_loss_limit"],
         "error_terakhir": errors[-15:],
