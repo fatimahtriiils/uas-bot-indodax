@@ -28,6 +28,8 @@ def run_backtest(cfg, candles, costs, start_ts, end_ts, simpan_sinyal=False, qty
     rp0 = candles.get(p["pair_rezim"]) or next(iter(candles.values()))
     off = rp0[0]["t"] % tf if rp0 else 0               # perataan candle diambil dari data, bukan diasumsikan
     first = math.ceil((start_ts - tf - off) / tf) * tf + off
+    start_ts, end_ts = int(start_ts), int(end_ts)          # waktu ISO bisa terbaca sebagai float
+    first = int(first)
     timeline = [t for t in range(first, end_ts + 1, tf) if start_ts <= t + tf < end_ts]
 
     st = {"kas": float(p["modal_awal"]), "posisi": {}, "seq": 0, "hari": None, "equity_awal_hari": None, "dll_hari": None}
