@@ -446,12 +446,16 @@ try{const s=localStorage.getItem('tema');if(s)document.documentElement.dataset.t
 
 let lastOk=null;
 function load(){
-  fetch('/api/report',{cache:'no-store'}).then(r=>r.json()).then(R=>{if(R.error)throw new Error(R.error);const y=window.scrollY;render(R);window.scrollTo(0,y);lastOk=new Date();stamp()})
+  fetch('/api/report',{cache:'no-store'}).then(r=>r.json()).then(R=>{if(R.error)throw new Error(R.error);const y=window.scrollY;render(R);window.scrollTo(0,y);jadwal=(R.strategi||{}).jadwal_cron_menit||jadwal;lastOk=new Date();stamp()})
   .catch(e=>{if(!lastOk){$('#status').innerHTML=`<div class="notice bad"><b>Dashboard gagal memuat data.</b> ${esc(e.message)}</div>`;$('#live').innerHTML='<span class="dot bad"></span><span>Data tidak dapat dimuat</span>'}});
 }
-function stamp(){const u=$('#upd');if(u&&lastOk)u.textContent='Diperbarui otomatis tiap menit, terakhir '+lastOk.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
+let jadwal=[7,37];
+function stamp(){const u=$('#upd');if(!u||!lastOk)return;
+  const d=Math.max(0,Math.round((Date.now()-lastOk)/1000));
+  const n=new Date();let nx=null;for(let h=0;h<2&&!nx;h++)for(const m of jadwal.slice().sort((a,b)=>a-b)){const t=new Date(n);t.setHours(n.getHours()+h,m,0,0);if(t>n){nx=t;break}}
+  u.textContent='Data diperbarui '+(d<2?'barusan':d+' detik lalu')+(nx?', panggilan bot berikutnya '+nx.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}):'')}
 if(window.__REPORT__){render(window.__REPORT__);const u=document.getElementById('upd');if(u)u.textContent='Versi offline: data dibekukan saat file dibuat'}
-else{load();setInterval(()=>{if(!document.hidden)load()},60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()})}
+else{load();setInterval(()=>{if(!document.hidden)load()},30000);setInterval(stamp,1000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()})}
 })();
 </script>
 </body>
