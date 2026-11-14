@@ -1,0 +1,78 @@
+{"waktu_utc": "2026-11-05T07:43:49Z", "jenis": "reset_freeze", "keterangan": "state & log dikosongkan saat freeze; log pra-freeze diarsip di logs/pra_freeze/. Snapshot dipertahankan."}
+{"waktu_utc": "2026-11-07T16:07:48Z", "call_id": "1794067627-22eb4e", "jenis": "data_tidak_valid", "pair": "btcidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-07T16:07:48Z", "call_id": "1794067627-22eb4e", "jenis": "data_tidak_valid", "pair": "ethidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-07T16:07:48Z", "call_id": "1794067627-22eb4e", "jenis": "data_tidak_valid", "pair": "xrpidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-07T16:07:48Z", "call_id": "1794067627-22eb4e", "jenis": "data_tidak_valid", "pair": "dogeidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-07T16:07:48Z", "call_id": "1794067627-22eb4e", "jenis": "data_tidak_valid", "pair": "solidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-07T20:07:48Z", "call_id": "1794082027-db3836", "jenis": "data_tidak_valid", "pair": "btcidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-07T20:07:48Z", "call_id": "1794082027-db3836", "jenis": "data_tidak_valid", "pair": "ethidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-07T20:07:48Z", "call_id": "1794082027-db3836", "jenis": "data_tidak_valid", "pair": "xrpidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-07T20:07:48Z", "call_id": "1794082027-db3836", "jenis": "data_tidak_valid", "pair": "dogeidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-07T20:07:48Z", "call_id": "1794082027-db3836", "jenis": "data_tidak_valid", "pair": "solidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T00:07:48Z", "call_id": "1794096428-125468", "jenis": "data_tidak_valid", "pair": "btcidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T00:07:48Z", "call_id": "1794096428-125468", "jenis": "data_tidak_valid", "pair": "ethidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T00:07:48Z", "call_id": "1794096428-125468", "jenis": "data_tidak_valid", "pair": "xrpidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T00:07:48Z", "call_id": "1794096428-125468", "jenis": "data_tidak_valid", "pair": "dogeidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T00:07:48Z", "call_id": "1794096428-125468", "jenis": "data_tidak_valid", "pair": "solidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T04:07:47Z", "call_id": "1794110826-0edc38", "jenis": "data_tidak_valid", "pair": "btcidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T04:07:47Z", "call_id": "1794110826-0edc38", "jenis": "data_tidak_valid", "pair": "ethidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T04:07:47Z", "call_id": "1794110826-0edc38", "jenis": "data_tidak_valid", "pair": "xrpidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T04:07:47Z", "call_id": "1794110826-0edc38", "jenis": "data_tidak_valid", "pair": "dogeidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T04:07:47Z", "call_id": "1794110826-0edc38", "jenis": "data_tidak_valid", "pair": "solidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T08:07:48Z", "call_id": "1794125227-de782e", "jenis": "data_tidak_valid", "pair": "btcidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T08:07:48Z", "call_id": "1794125227-de782e", "jenis": "data_tidak_valid", "pair": "ethidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T08:07:48Z", "call_id": "1794125227-de782e", "jenis": "data_tidak_valid", "pair": "xrpidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T08:07:48Z", "call_id": "1794125227-de782e", "jenis": "data_tidak_valid", "pair": "dogeidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T08:07:48Z", "call_id": "1794125227-de782e", "jenis": "data_tidak_valid", "pair": "solidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T12:07:47Z", "call_id": "1794139627-b10e5b", "jenis": "data_tidak_valid", "pair": "btcidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T12:07:47Z", "call_id": "1794139627-b10e5b", "jenis": "data_tidak_valid", "pair": "ethidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T12:07:47Z", "call_id": "1794139627-b10e5b", "jenis": "data_tidak_valid", "pair": "xrpidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T12:07:47Z", "call_id": "1794139627-b10e5b", "jenis": "data_tidak_valid", "pair": "dogeidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T12:07:47Z", "call_id": "1794139627-b10e5b", "jenis": "data_tidak_valid", "pair": "solidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T16:07:48Z", "call_id": "1794154027-7b3402", "jenis": "data_tidak_valid", "pair": "btcidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T16:07:48Z", "call_id": "1794154027-7b3402", "jenis": "data_tidak_valid", "pair": "ethidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T16:07:48Z", "call_id": "1794154027-7b3402", "jenis": "data_tidak_valid", "pair": "xrpidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T16:07:48Z", "call_id": "1794154027-7b3402", "jenis": "data_tidak_valid", "pair": "dogeidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T16:07:48Z", "call_id": "1794154027-7b3402", "jenis": "data_tidak_valid", "pair": "solidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T20:07:49Z", "call_id": "1794168428-8a1160", "jenis": "data_tidak_valid", "pair": "btcidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T20:07:49Z", "call_id": "1794168428-8a1160", "jenis": "data_tidak_valid", "pair": "ethidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T20:07:49Z", "call_id": "1794168428-8a1160", "jenis": "data_tidak_valid", "pair": "xrpidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T20:07:49Z", "call_id": "1794168428-8a1160", "jenis": "data_tidak_valid", "pair": "dogeidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-08T20:07:49Z", "call_id": "1794168428-8a1160", "jenis": "data_tidak_valid", "pair": "solidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T00:07:48Z", "call_id": "1794182827-bdbdb2", "jenis": "data_tidak_valid", "pair": "btcidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T00:07:48Z", "call_id": "1794182827-bdbdb2", "jenis": "data_tidak_valid", "pair": "ethidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T00:07:48Z", "call_id": "1794182827-bdbdb2", "jenis": "data_tidak_valid", "pair": "xrpidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T00:07:48Z", "call_id": "1794182827-bdbdb2", "jenis": "data_tidak_valid", "pair": "dogeidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T00:07:48Z", "call_id": "1794182827-bdbdb2", "jenis": "data_tidak_valid", "pair": "solidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T04:07:47Z", "call_id": "1794197226-c9f9dc", "jenis": "data_tidak_valid", "pair": "btcidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T04:07:47Z", "call_id": "1794197226-c9f9dc", "jenis": "data_tidak_valid", "pair": "ethidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T04:07:47Z", "call_id": "1794197226-c9f9dc", "jenis": "data_tidak_valid", "pair": "xrpidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T04:07:47Z", "call_id": "1794197226-c9f9dc", "jenis": "data_tidak_valid", "pair": "dogeidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T04:07:47Z", "call_id": "1794197226-c9f9dc", "jenis": "data_tidak_valid", "pair": "solidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T08:07:48Z", "call_id": "1794211627-df83ef", "jenis": "data_tidak_valid", "pair": "btcidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T08:07:48Z", "call_id": "1794211627-df83ef", "jenis": "data_tidak_valid", "pair": "ethidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T08:07:48Z", "call_id": "1794211627-df83ef", "jenis": "data_tidak_valid", "pair": "xrpidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T08:07:48Z", "call_id": "1794211627-df83ef", "jenis": "data_tidak_valid", "pair": "dogeidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T08:07:48Z", "call_id": "1794211627-df83ef", "jenis": "data_tidak_valid", "pair": "solidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T12:07:48Z", "call_id": "1794226027-ff0110", "jenis": "data_tidak_valid", "pair": "btcidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T12:07:48Z", "call_id": "1794226027-ff0110", "jenis": "data_tidak_valid", "pair": "ethidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T12:07:48Z", "call_id": "1794226027-ff0110", "jenis": "data_tidak_valid", "pair": "xrpidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T12:07:48Z", "call_id": "1794226027-ff0110", "jenis": "data_tidak_valid", "pair": "dogeidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T12:07:48Z", "call_id": "1794226027-ff0110", "jenis": "data_tidak_valid", "pair": "solidr", "keterangan": "data_candle_gagal"}
+{"waktu_utc": "2026-11-09T14:19:53Z", "jenis": "kill_switch_diubah", "nilai": "1", "keterangan": "uji kill switch terjadwal, di antara dua candle sehingga tidak memengaruhi sinyal", "sumber": "tools/storage_admin.py"}
+{"waktu_utc": "2026-11-09T14:28:32Z", "jenis": "perbaikan_bug", "keterangan": "Indodax menolak sebagian request dari Vercel (HTTP 403). Candle tanpa data kini dicoba lagi di panggilan berikutnya, uptime dihitung jujur. Tidak mengubah config/ maupun core/strategy.py", "sumber": "tools/storage_admin.py"}
+{"waktu_utc": "2026-11-09T14:30:14Z", "jenis": "perbaikan_bug", "keterangan": "Region fungsi Vercel dipindah dari iad1 ke sin1 karena Indodax menolak semua request dari IP iad1 (HTTP 403). Tidak mengubah aturan trading.", "sumber": "tools/storage_admin.py"}
+{"waktu_utc": "2026-11-09T14:34:15Z", "call_id": "1794234855-267c60", "jenis": "kill_switch_ON", "keterangan": "perubahan flag uas:kill_switch terdeteksi oleh tick"}
+{"waktu_utc": "2026-11-09T14:34:57Z", "call_id": "1794234855-267c60", "jenis": "data_gagal_dicoba_lagi", "candle_t": 1794211200, "keterangan": "candle gagal diambil: ['btcidr', 'ethidr', 'xrpidr', 'dogeidr', 'solidr']; error: ['http_403']"}
+{"waktu_utc": "2026-11-09T14:37:47Z", "call_id": "1794235026-e408cc", "jenis": "data_gagal_dicoba_lagi", "candle_t": 1794211200, "keterangan": "candle gagal diambil: ['btcidr', 'ethidr', 'xrpidr', 'dogeidr', 'solidr']; error: ['http_403']"}
+{"waktu_utc": "2026-11-09T14:41:09Z", "jenis": "perbaikan_bug", "keterangan": "User-Agent diganti ke UAS-AlgoTrading-25110200019/1.0 karena Indodax menolak UA lama (HTTP 403) sejak ~7 Nov. Diuji dengan curl: UA lama 403, UA baru 200. Tidak mengubah aturan trading.", "sumber": "tools/storage_admin.py"}
+{"waktu_utc": "2026-11-10T00:41:41Z", "jenis": "kill_switch_diubah", "nilai": "0", "keterangan": "kill switch tidak sengaja dibiarkan menyala sejak uji 9 Nov 21.20 WIB; dimatikan 10 Nov pagi", "sumber": "tools/storage_admin.py"}
+{"waktu_utc": "2026-11-10T00:47:21Z", "jenis": "perbaikan_bug", "keterangan": "Dashboard menampilkan uptime di luar gangguan Indodax; tidak mengubah aturan trading", "sumber": "tools/storage_admin.py"}
+{"waktu_utc": "2026-11-10T00:51:44Z", "call_id": "1794271904-7d6864", "jenis": "kill_switch_OFF", "keterangan": "perubahan flag uas:kill_switch terdeteksi oleh tick"}
+{"waktu_utc": "2026-11-10T00:58:11Z", "jenis": "perbaikan_bug", "keterangan": "Perubahan warna tampilan dashboard (pink dan hijau muda); tidak mengubah aturan trading", "sumber": "tools/storage_admin.py"}
+{"waktu_utc": "2026-11-10T01:02:23Z", "jenis": "perbaikan_bug", "keterangan": "Perubahan warna tampilan dashboard (pink dan hijau muda); tidak mengubah aturan trading", "sumber": "tools/storage_admin.py"}
+{"waktu_utc": "2026-11-13T01:02:24Z", "jenis": "perbaikan_bug", "keterangan": "Perubahan tampilan dashboard (kartu metrik, tabel order, pembaruan otomatis); tidak mengubah aturan trading", "sumber": "tools/storage_admin.py"}
+{"waktu_utc": "2026-11-13T01:08:40Z", "jenis": "perbaikan_bug", "keterangan": "Tampilan dashboard: judul metrik dihapus, kartu kill switch menampilkan jumlah pemakaian; tidak mengubah aturan trading", "sumber": "tools/storage_admin.py"}
+{"waktu_utc": "2026-11-13T02:19:07Z", "jenis": "perbaikan_bug", "keterangan": "Tampilan: indikator pembaruan otomatis tiap 30 detik; tidak mengubah aturan trading", "sumber": "tools/storage_admin.py"}
+{"waktu_utc": "2026-11-13T03:06:18Z", "jenis": "perbaikan_bug", "keterangan": "Perbaikan bug alat backtest jendela (waktu desimal, berhenti di candle terakhir yang tersedia); tidak mengubah aturan trading", "sumber": "tools/storage_admin.py"}
+{"waktu_utc": "2026-11-14T04:07:11Z", "call_id": "1794629226-4fe278", "jenis": "data_tidak_valid", "pair": "solidr", "keterangan": "orderbook:spread_lebih_2persen"}

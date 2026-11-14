@@ -36,6 +36,21 @@ Waktu sebenarnya dicatat apa adanya; tidak ada riwayat commit yang ditulis ulang
   `Python-urllib`, dari Vercel maupun dari laptop (uji curl: UA lama 403, curl biasa 200). User-Agent diganti menjadi
   `UAS-AlgoTrading-25110200019/1.0 (tugas kuliah)` (`core/indodax.py`), tidak menyamar sebagai browser. Region fungsi juga
   dipindah ke `sin1` (`vercel.json`) sebelum penyebab ini diketahui. Semua perubahan dicatat di log `events`.
+- 13 Nov 2026: tampilan dashboard diperbarui (warna, susunan kartu metrik, pembaruan otomatis tiap 30 detik). Angka tetap dari `core/report.py`.
+- 14 Nov 2026, perbaikan bug alat backtest jendela (`backtest/run_backtest.py`, `core/backtest_engine.py`): waktu desimal menyebabkan error, dan backtest kini berhenti di candle terakhir yang tersedia. Aturan trading tidak berubah; dicatat dengan `catat-bugfix`.
+
+## Hasil akhir (dihitung ulang dengan `hitung_ulang.py`, 14 Nov 2026)
+
+| Metrik | Strategi | BTC/IDR buy & hold |
+|---|---|---|
+| Forward test (5–14 Nov 2026), modal Rp100.000.000 | return 0,00%, MDD 0,00%, 0 trade | −16,22% (MDD −16,22%) |
+| Backtest ≥3 tahun | return 62,01%, CAGR 17,45%, MDD −19,22%, 50 trade, win rate 42,00%, profit factor 1,95, porsi biaya 19,03% | return 157,66%, CAGR 37,09%, MDD −49,43% |
+| Gap backtest vs forward | 210/210 sinyal identik (100%), selisih return 0,00% | |
+| Uptime | 77,78% (42/54 candle); 100% (42/42) di luar 12 candle saat Indodax menolak akses (HTTP 403, 7–9 Nov) | |
+| Panggilan terjadwal | 426/426 terlaksana | |
+
+Selama forward test tidak ada sinyal beli: filter rezim BTC hanya terpenuhi pada 5 dari 270 baris sinyal, dan breakout tidak pernah terpenuhi
+saat pasar turun. Return 0% ini hasil aturan yang dibekukan, bukan error. Penjelasan lengkap di [REFLEKSI.md](REFLEKSI.md).
 
 ## Struktur
 
@@ -97,7 +112,7 @@ python backtest/run_backtest.py jendela           # → results/window/
 curl -s https://<app>.vercel.app/api/report > report_vercel.json   # setelah results/window di-push & deploy
 python hitung_ulang.py --banding report_vercel.json  # harus "0 berbeda"
 ```
-Kumpulkan: ZIP repo (tanpa `.env`), `dist/dashboard_offline.html`, link Vercel, link repo.
+Kumpulkan: ZIP repo (tanpa `.env`, berisi `dashboard_offline.html` hasil salinan dari `dist/`), link Vercel, link repo.
 
 ## Keamanan
 Secret hanya di Environment Variables Vercel / GitHub Secrets / `.env` lokal (di-.gitignore). `.env.example` tanpa isi.
@@ -118,5 +133,5 @@ Secret hanya di Environment Variables Vercel / GitHub Secrets / `.env` lokal (di
   padahal koin diperdagangkan pecahan, sehingga field itu tidak dipakai (lihat `core/execution.py`).
 
 ## Sumber resmi
-- API publik Indodax: https://github.com/btcid/indodax-official-api-docs (ISI tanggal akses)
-- Vercel Cron, Functions, Storage: https://vercel.com/docs/cron-jobs/usage-and-pricing, https://vercel.com/docs/functions/limitations, https://vercel.com/docs/storage (ISI tanggal akses)
+- API publik Indodax: https://github.com/btcid/indodax-official-api-docs (diakses 14 Nov 2026)
+- Vercel Cron, Functions, Storage: https://vercel.com/docs/cron-jobs/usage-and-pricing, https://vercel.com/docs/functions/limitations, https://vercel.com/docs/storage (diakses 14 Nov 2026)

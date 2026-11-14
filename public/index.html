@@ -226,7 +226,7 @@ function timeline(R){
   if(!ok(fa)||!ok(fb)) return '<div class="empty">Pita waktu muncul setelah forward test dimulai.</div>';
   const now=Date.parse(R.dibuat_utc)/1000,miss=new Set(O.candle_tidak_diproses||[]);
   const ticks=[];for(let c=fa;c<fb;c+=tf){const t=c-tf;let k='',lab='belum tiba';
-    if(miss.has(t)){k='miss';lab=(O.candle_tanpa_data||[]).includes(t)?'data ditolak Indodax (HTTP 403)':'tidak diproses tepat waktu'}else if(c+tf<=now){k='ok';lab='diproses tepat waktu'}else if(c<=now){k='wait';lab='masih dalam tenggat'}
+    if(miss.has(t)){k='miss';lab=(O.candle_tanpa_data||[]).includes(t)?'data ditolak Indodax (HTTP 403)':'tidak diproses tepat waktu'}else if(c+tf<=now||now>=fb){k='ok';lab='diproses tepat waktu'}else if(c<=now){k='wait';lab='masih dalam tenggat'}
     ticks.push(`<span class="tk ${k}" title="Candle tutup ${wib(c)}: ${lab}"></span>`)}
   const per=Math.round(86400/tf),days=Math.ceil(ticks.length/per);
   const dl=[];for(let d=0;d<days;d++)dl.push(`<span>${d%2===0?'H'+(d+1):''}</span>`);

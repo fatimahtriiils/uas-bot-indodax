@@ -41,7 +41,7 @@ def main():
         from core.bot import iso
         print(f"CATATAN: data candle baru tersedia sampai {iso(last)}, sebelum akhir jendela {iso(int(b))}. "
               f"Backtest dijalankan sampai {iso(last)} (wajar bila forward test belum selesai).")
-        b = last
+        b = last + 1          # candle yang tutup tepat pada `last` tetap ikut
     out = run_backtest(cfg, candles, costs, a, b, simpan_sinyal=sig, qty_dec=qty_dec)
     save_results(out, os.path.join(ROOT, out_dir))
     n_buy = sum(1 for o in out["orders"] if o["sisi"] == "buy")
